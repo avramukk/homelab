@@ -42,6 +42,42 @@ dig +short homelab.avramukk.com          # → Cloudflare anycast IPs
 tofu -chdir=terraform output tunnel_id
 ```
 
+## A hostname resolves publicly but not on one machine
+
+**Symptom:** a public hostname works from other networks but a specific machine
+gets `ERR_NAME_NOT_RESOLVED`, while `dig @1.1.1.1 <host>` answers correctly.
+
+**Cause:** local DNS state, not the tunnel. In this lab it was **Tailscale
+MagicDNS** — Tailscale had installed its resolver (`100.100.100.100`) as a system
+resolver, and that resolver stopped answering (`dig @100.100.100.100 google.com`
+returned nothing / `SERVFAIL`). macOS then cached the failed lookup.
+
+**Diagnose, cheapest first:**
+
+```bash
+dig +short demo.avramukk.com            # system resolver
+dig +short @1.1.1.1 demo.avramukk.com   # public resolver (control)
+dig +short @100.100.100.100 google.com  # Tailscale MagicDNS health
+scutil --dns | grep -c 100.100.100.100  # is MagicDNS a resolver?
+dscacheutil -q host -a name demo.avramukk.com   # is it cached?
+```
+
+**Fix (in order):**
+
+```bash
+# 1. If MagicDNS is broken, take Tailscale out of the DNS path
+tailscale set --accept-dns=false
+
+# 2. Flush the macOS cache (needs sudo)
+sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder
+
+# 3. Clear the browser's own host cache
+#    Chrome/Edge: chrome://net-internals/#dns → Clear host cache, then reload
+```
+
+The site itself is fine if `dig @1.1.1.1` answers and
+`curl --resolve <host>:443:<ip> https://<host>` returns 200.
+
 ## Restart the connector
 
 ```bash
