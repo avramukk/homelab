@@ -41,3 +41,6 @@ INBOX.md
 # Re-include here because a global ignore (~/.gitignore_global) excludes **/.opencode/.
 !.opencode/
 !.opencode/**
+
+# Go build artifact (module github.com/avramukk/homelab/demo)
+/apps/demo/demo
