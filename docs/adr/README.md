@@ -58,3 +58,4 @@ What becomes easier, what becomes harder, what we accept as a known limitation.
 | [014](014-incident-drill.md) | Deliberate incident drill and postmortem | Accepted |
 | [015](015-repository-layout.md) | Monorepo layout | Accepted |
 | [016](016-runtime-k3s-k3d.md) | Cluster runtime: k3s via k3d (Talos deferred) | Accepted |
+| [017](017-argocd-bootstrap.md) | Argo CD bootstrap: Helm once, then self-managed | Accepted |
