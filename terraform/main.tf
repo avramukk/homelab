@@ -8,8 +8,7 @@ data "cloudflare_zone" "this" {
   }
 }
 
-# The tunnel and its remote-managed configuration are fully owned by OpenTofu
-# (ADR-019). cloudflared in the cluster joins it with the tunnel token.
+# The tunnel and its remote-managed configuration are owned by OpenTofu (ADR-019).
 resource "cloudflare_zero_trust_tunnel_cloudflared" "homelab" {
   account_id = data.cloudflare_zone.this.account.id
   name       = var.tunnel_name
@@ -20,12 +19,19 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "homelab" {
   account_id = data.cloudflare_zone.this.account.id
   tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.homelab.id
 
-  # Hostname → service rules are added when a service exists. Until then the
-  # catch-all returns 404 for any hostname reaching the tunnel.
   config = {
-    ingress = [
-      { service = "http_status:404" }
-    ]
+    ingress = concat(
+      [
+        for host, service in var.public_hostnames : {
+          hostname = "${host}.${var.zone_name}"
+          service  = service
+        }
+      ],
+      [
+        # Catch-all required by cloudflared; must be last.
+        { service = "http_status:404" }
+      ]
+    )
   }
 }
 
@@ -33,7 +39,7 @@ resource "cloudflare_dns_record" "public" {
   for_each = var.public_hostnames
 
   zone_id = data.cloudflare_zone.this.id
-  name    = each.value
+  name    = each.key
   type    = "CNAME"
   content = "${cloudflare_zero_trust_tunnel_cloudflared.homelab.id}.cfargotunnel.com"
   proxied = true

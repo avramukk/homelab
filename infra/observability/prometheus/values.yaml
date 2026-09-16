@@ -44,6 +44,13 @@ grafana:
   # Admin credentials come from a SealedSecret (keys: admin-user, admin-password).
   admin:
     existingSecret: grafana-admin
+  # Public dashboards are anonymous read-only (ADR-008).
+  "grafana.ini":
+    auth.anonymous:
+      enabled: true
+      org_role: Viewer
+    users:
+      viewers_can_edit: false
   # Datasources as code. Prometheus is added by the chart as the default.
   additionalDataSources:
     - name: Loki

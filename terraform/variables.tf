@@ -17,7 +17,11 @@ variable "tunnel_name" {
 }
 
 variable "public_hostnames" {
-  description = "Subdomains under zone_name published through the tunnel (DNS records)."
-  type        = set(string)
-  default     = []
+  description = <<-EOT
+    Subdomain → in-cluster Service mapping published through the tunnel.
+    Creates both the proxied CNAME and the tunnel ingress rule.
+    Example: { "status" = "http://uptime-kuma.status.svc.cluster.local:80" }
+  EOT
+  type        = map(string)
+  default     = {}
 }
