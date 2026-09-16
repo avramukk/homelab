@@ -28,6 +28,9 @@ kubeconfig*
 .vscode/
 *.tmp
 
+# Local task tracking (never committed)
+TODO-*.md
+
 # Tooling artifacts
 .playwright-mcp/
 
