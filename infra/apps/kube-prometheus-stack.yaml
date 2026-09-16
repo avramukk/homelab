@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    # Metrics stack: Prometheus, Alertmanager, Grafana, node-exporter, kube-state-metrics.
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: 91.4.1
+      helm:
+        releaseName: kube-prometheus-stack
+        valueFiles:
+          - $values/infra/observability/prometheus/values.yaml
+    # Values live in this repository.
+    - repoURL: https://github.com/avramukk/homelab.git
+      targetRevision: main
+      ref: values
+    # SealedSecrets (e.g. Grafana admin) for the observability namespace.
+    - repoURL: https://github.com/avramukk/homelab.git
+      targetRevision: main
+      path: infra/observability/manifests
+      directory:
+        recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: observability
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 5m

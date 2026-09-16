@@ -1,0 +1,84 @@
+# kube-prometheus-stack — the metrics backbone of the LGTM stack (ADR-007).
+# Tuned for a small cluster (3 nodes, ~12 GiB): short retention, conservative
+# scrape intervals, explicit resource limits.
+crds:
+  enabled: true
+
+prometheus:
+  prometheusSpec:
+    # Short local retention; long-term storage (Mimir/Thanos) is out of scope.
+    retention: 6h
+    # Conservative interval keeps sample rate (and cardinality) low.
+    scrapeInterval: 60s
+    evaluationInterval: 60s
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: local-path
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 5Gi
+
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    resources:
+      requests:
+        cpu: 25m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+    # Receivers (Telegram, page/ticket routing) land with ADR-009.
+
+grafana:
+  enabled: true
+  # Admin credentials come from a SealedSecret (keys: admin-user, admin-password).
+  admin:
+    existingSecret: grafana-admin
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 300m
+      memory: 512Mi
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    size: 2Gi
+
+prometheusOperator:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+kube-state-metrics:
+  resources:
+    requests:
+      cpu: 20m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+prometheus-node-exporter:
+  resources:
+    requests:
+      cpu: 20m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
