@@ -1,5 +1,5 @@
 variable "cloudflare_api_token" {
-  description = "Cloudflare API token: Zone → DNS → Edit, Zone → Zone → Read, Account → Cloudflare Tunnel → Edit."
+  description = "Cloudflare API token: Zone DNS Edit, Zone Read, Account Cloudflare Tunnel Edit."
   type        = string
   sensitive   = true
 }
@@ -18,20 +18,33 @@ variable "tunnel_name" {
 
 variable "public_hostnames" {
   description = <<-EOT
-    Subdomain → in-cluster Service mapping actually served through the tunnel.
-    Creates both the proxied CNAME and the tunnel ingress rule.
-    Keep this minimal: only services that are meant to be public.
+    Subdomain → in-cluster Service served openly through the Cloudflare Tunnel.
+    Creates a proxied CNAME plus a tunnel ingress rule.
     Example: { "status" = "http://uptime-kuma.status.svc.cluster.local:3001" }
   EOT
   type        = map(string)
   default     = {}
 }
 
-variable "reserved_hostnames" {
+variable "private_hostnames" {
   description = <<-EOT
-    Subdomains that resolve through the tunnel but serve no service (the tunnel
-    catch-all answers 404). Use to reserve a name before its service exists.
+    Subdomain → tailnet-only access. Creates a **DNS-only A record** pointing at
+    `tailscale_ip`, so the name resolves only for devices on the tailnet, where
+    Traefik routes it by Host header. Deliberately NOT proxied and NOT in the tunnel.
+    Example: { "grafana" = "kube-prometheus-stack-grafana.observability.svc.cluster.local" }
   EOT
+  type        = map(string)
+  default     = {}
+}
+
+variable "tailscale_ip" {
+  description = "Tailscale (tailnet) IP of the cluster host; target of private hostnames."
+  type        = string
+  default     = ""
+}
+
+variable "reserved_hostnames" {
+  description = "Subdomains that resolve through the tunnel but serve nothing (catch-all 404)."
   type        = set(string)
   default     = []
 }

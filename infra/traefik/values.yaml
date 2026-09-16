@@ -1,6 +1,8 @@
-# Traefik ingress — GitOps-managed instance.
-# k3s' bundled Traefik is disabled at cluster creation (ADR-016); this replaces it.
-# Rationale for Traefik over ingress-nginx (retired March 2026): ADR-006.
+# Traefik — public + tailnet ingress for the homelab.
+# - Public: reached by cloudflared (Cloudflare Tunnel) or directly on the host.
+# - Private: reached over Tailscale at the tailnet IP; routed by Host header.
+# TLS: Let's Encrypt with a DNS-01 challenge (no inbound ports needed) using the
+# Cloudflare API token from a SealedSecret.
 deployment:
   replicas: 1
 
@@ -15,8 +17,7 @@ resources:
 service:
   type: LoadBalancer
 
-# Dashboard stays internal; reach it with a port-forward to the Traefik service.
-# It is deliberately not published through an IngressRoute.
+# Dashboard stays internal.
 ingressRoute:
   dashboard:
     enabled: false
@@ -26,3 +27,28 @@ providers:
     enabled: true
   kubernetesCRD:
     enabled: true
+
+additionalArguments:
+  # Redirect plain HTTP to HTTPS.
+  - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+  - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+  # Let's Encrypt via DNS-01 (Cloudflare).
+  - "--certificatesresolvers.letsencrypt.acme.email=avramuk89@gmail.com"
+  - "--certificatesresolvers.letsencrypt.acme.storage=/data/acme.json"
+  - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
+  - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare"
+  - "--certificatesresolvers.letsencrypt.acme.dnschallenge.resolvers=1.1.1.1:53"
+  - "--certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=15"
+
+env:
+  - name: CF_DNS_API_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: cloudflare-dns
+        key: CF_DNS_API_TOKEN
+
+# ACME state (account key + issued certificates) must survive restarts.
+persistence:
+  enabled: true
+  storageClass: local-path
+  size: 128Mi

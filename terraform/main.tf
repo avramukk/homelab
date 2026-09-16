@@ -16,16 +16,17 @@ resource "cloudflare_zero_trust_tunnel_cloudflared" "homelab" {
 }
 
 locals {
-  # Everything that gets a DNS record: served hostnames plus reserved ones.
-  dns_hostnames = toset(concat(keys(var.public_hostnames), tolist(var.reserved_hostnames)))
+  account_id  = data.cloudflare_zone.this.account.id
+  tunnel_host = "${cloudflare_zero_trust_tunnel_cloudflared.homelab.id}.cfargotunnel.com"
+  public_dns  = toset(concat(keys(var.public_hostnames), tolist(var.reserved_hostnames)))
+  private_dns = toset(keys(var.private_hostnames))
 }
 
+# Public traffic: tunnel ingress + proxied CNAME.
 resource "cloudflare_zero_trust_tunnel_cloudflared_config" "homelab" {
-  account_id = data.cloudflare_zone.this.account.id
+  account_id = local.account_id
   tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.homelab.id
 
-  # Only public_hostnames get an ingress rule. Anything else falls through to the
-  # catch-all 404, which is how a reserved hostname behaves until it has a service.
   config = {
     ingress = concat(
       [
@@ -43,13 +44,28 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "homelab" {
 }
 
 resource "cloudflare_dns_record" "public" {
-  for_each = local.dns_hostnames
+  for_each = local.public_dns
 
   zone_id = data.cloudflare_zone.this.id
   name    = each.value
   type    = "CNAME"
-  content = "${cloudflare_zero_trust_tunnel_cloudflared.homelab.id}.cfargotunnel.com"
+  content = local.tunnel_host
   proxied = true
   ttl     = 1
-  comment = "Managed by OpenTofu (homelab)"
+  comment = "Public via Cloudflare Tunnel (OpenTofu)"
+}
+
+# Private traffic: DNS-only A records pointing at the tailnet address. A 100.x
+# address is routable only inside the tailnet, so these names are unreachable
+# from the internet while still being real domain names on your devices.
+resource "cloudflare_dns_record" "private" {
+  for_each = local.private_dns
+
+  zone_id = data.cloudflare_zone.this.id
+  name    = each.value
+  type    = "A"
+  content = var.tailscale_ip
+  proxied = false
+  ttl     = 300
+  comment = "Private (Tailscale) — Traefik routes by host (OpenTofu)"
 }

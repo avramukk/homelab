@@ -18,6 +18,12 @@ spec:
     - repoURL: https://github.com/avramukk/homelab.git
       targetRevision: main
       ref: values
+    # Private hostnames routed by Traefik + the Cloudflare DNS token SealedSecret.
+    - repoURL: https://github.com/avramukk/homelab.git
+      targetRevision: main
+      path: infra/traefik/manifests
+      directory:
+        recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: traefik
