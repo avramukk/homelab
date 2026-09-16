@@ -11,7 +11,7 @@ reasoning end to end, without reading the code first.
 3. [`adr/`](adr/) — every significant decision, in chronological order.
    This is the backbone: the history of *why*.
 4. [`architecture/cluster.md`](architecture/cluster.md) — the concrete cluster.
-5. [`operations/`](operations/) — SLOs, alerting/on-call, backups.
+5. [`operations/`](operations/) — credentials, SLOs, alerting/on-call, backups.
 6. [`runbooks/`](runbooks/) — what to do when it breaks.
 7. [`security/`](security/) — the hardening baseline.
 8. [`incident-reports/`](incident-reports/) — blameless postmortems, incl. the

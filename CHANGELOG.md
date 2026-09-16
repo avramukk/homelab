@@ -20,6 +20,7 @@ by phase.
 - SLO recording + multi-window burn-rate rules with runbooks ([ADR-009](docs/adr/009-alerting-telegram-slo.md)).
 - Demo API published at `demo.avramukk.com` through the tunnel ([ADR-021](docs/adr/021-publish-demo-api.md)); Grafana remains private.
 - Grafana dashboards as code: Demo RED, Demo SLO / error budget, Cluster and Stack health (provisioned via labelled ConfigMaps).
+- Operator credentials consolidated in 1Password (`Homelab · *` items); the repository keeps SealedSecret ciphertext only ([docs/operations/credentials.md](docs/operations/credentials.md)).
 
 ### Changed
 - Runtime pivoted from Talos-on-QEMU to k3s-via-k3d after macOS networking and
