@@ -3,9 +3,7 @@
 
 cloudflare_api_token = "replace-with-cloudflare-api-token"
 zone_name            = "avramukk.com"
+tunnel_name          = "homelab"
 
-# From: cloudflared tunnel create homelab
-tunnel_id = "00000000-0000-0000-0000-000000000000"
-
-# Subdomains under zone_name published through the tunnel (DNS only).
+# Subdomains under zone_name published through the tunnel (DNS records).
 public_hostnames = ["homelab"]

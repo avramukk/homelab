@@ -1,7 +1,7 @@
 # ADR-018: Cloudflare Tunnel via cloudflared CLI; OpenTofu manages DNS only
 
 ## Status
-Accepted
+Superseded by [ADR-019](019-cloudflare-tunnel-in-opentofu.md)
 
 ## Date
 2026-09-16

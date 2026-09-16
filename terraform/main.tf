@@ -8,19 +8,34 @@ data "cloudflare_zone" "this" {
   }
 }
 
-# DNS only. The tunnel itself is created out-of-band with the cloudflared CLI
-# (`cloudflared tunnel create`), because that path authenticates with an origin
-# certificate instead of an account-scoped API token.
-#
-# Tunnel ingress (which service a hostname reaches) is configured on the
-# cloudflared side, not here.
+# The tunnel and its remote-managed configuration are fully owned by OpenTofu
+# (ADR-019). cloudflared in the cluster joins it with the tunnel token.
+resource "cloudflare_zero_trust_tunnel_cloudflared" "homelab" {
+  account_id = data.cloudflare_zone.this.account.id
+  name       = var.tunnel_name
+  config_src = "cloudflare"
+}
+
+resource "cloudflare_zero_trust_tunnel_cloudflared_config" "homelab" {
+  account_id = data.cloudflare_zone.this.account.id
+  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.homelab.id
+
+  # Hostname → service rules are added when a service exists. Until then the
+  # catch-all returns 404 for any hostname reaching the tunnel.
+  config = {
+    ingress = [
+      { service = "http_status:404" }
+    ]
+  }
+}
+
 resource "cloudflare_dns_record" "public" {
   for_each = var.public_hostnames
 
   zone_id = data.cloudflare_zone.this.id
   name    = each.value
   type    = "CNAME"
-  content = "${var.tunnel_id}.cfargotunnel.com"
+  content = "${cloudflare_zero_trust_tunnel_cloudflared.homelab.id}.cfargotunnel.com"
   proxied = true
   ttl     = 1
   comment = "Managed by OpenTofu (homelab)"

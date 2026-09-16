@@ -1,5 +1,5 @@
 variable "cloudflare_api_token" {
-  description = "Cloudflare API token with Zone → DNS → Edit (and Zone → Zone → Read) for the zone."
+  description = "Cloudflare API token: Zone → DNS → Edit, Zone → Zone → Read, Account → Cloudflare Tunnel → Edit."
   type        = string
   sensitive   = true
 }
@@ -10,17 +10,14 @@ variable "zone_name" {
   default     = "avramukk.com"
 }
 
-variable "tunnel_id" {
-  description = <<-EOT
-    Cloudflare Tunnel id created with the cloudflared CLI
-    (`cloudflared tunnel create homelab`). DNS records point at
-    "<tunnel_id>.cfargotunnel.com".
-  EOT
+variable "tunnel_name" {
+  description = "Name of the Cloudflare Tunnel used by cloudflared in the cluster."
   type        = string
+  default     = "homelab"
 }
 
 variable "public_hostnames" {
-  description = "Subdomains under zone_name published through the tunnel (DNS records only)."
+  description = "Subdomains under zone_name published through the tunnel (DNS records)."
   type        = set(string)
   default     = []
 }

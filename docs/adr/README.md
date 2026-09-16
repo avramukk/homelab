@@ -59,4 +59,5 @@ What becomes easier, what becomes harder, what we accept as a known limitation.
 | [015](015-repository-layout.md) | Monorepo layout | Accepted |
 | [016](016-runtime-k3s-k3d.md) | Cluster runtime: k3s via k3d (Talos deferred) | Accepted |
 | [017](017-argocd-bootstrap.md) | Argo CD bootstrap: Helm once, then self-managed | Accepted |
-| [018](018-cloudflare-tunnel-cli-opentofu-dns.md) | Cloudflare Tunnel via CLI; OpenTofu manages DNS only | Accepted |
+| [018](018-cloudflare-tunnel-cli-opentofu-dns.md) | Cloudflare Tunnel via CLI; OpenTofu manages DNS only | Superseded by [019](019-cloudflare-tunnel-in-opentofu.md) |
+| [019](019-cloudflare-tunnel-in-opentofu.md) | Cloudflare Tunnel managed in OpenTofu | Accepted |
