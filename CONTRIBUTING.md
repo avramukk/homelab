@@ -3,6 +3,14 @@
 This is a personal showcase repository, but it is written to production
 standards on purpose. These conventions keep the history readable.
 
+## Setup
+
+Enable the versioned git hooks (secret scan before each commit):
+
+```bash
+git config core.hooksPath .githooks
+```
+
 ## Commit style
 
 [Conventional Commits](https://www.conventionalcommits.org/):
