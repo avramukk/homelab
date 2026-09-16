@@ -36,7 +36,7 @@ flowchart LR
 | Secrets | Sealed Secrets | Planned |
 | Observability | Prometheus, Loki, Grafana, Tempo, OpenTelemetry, Alloy | Planned |
 | Status | Uptime Kuma | Planned |
-| Public edge | Cloudflare Tunnel | Planned |
+| Public edge | Cloudflare Tunnel | Running |
 | Demo workload | Go CRUD service + PostgreSQL, OTel-instrumented | Planned |
 | Alerts | Alertmanager → Telegram (page/ticket) | Planned |
 | Backup | Restic → local disk (B2 deferred) | Planned |
