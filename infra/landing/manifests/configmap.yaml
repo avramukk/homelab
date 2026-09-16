@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: landing
+  labels:
+    app.kubernetes.io/name: landing
+    app.kubernetes.io/part-of: homelab
+data:
+  index.html: |
+    <!doctype html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Homelab · avramukk.com</title>
+      <style>
+        :root { color-scheme: dark; }
+        body { margin:0; font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+               background:#0d1117; color:#e6edf3; display:flex; min-height:100vh; align-items:center; justify-content:center; }
+        main { max-width: 46rem; padding: 2.5rem; }
+        h1 { font-size: 1.9rem; margin: 0 0 .25rem; }
+        p.lead { color:#9da7b3; margin: 0 0 2rem; }
+        ul { list-style:none; padding:0; margin:0; }
+        li { border:1px solid #21262d; border-radius:10px; padding:1rem 1.25rem; margin-bottom:.75rem; background:#161b22; }
+        a { color:#58a6ff; text-decoration:none; font-weight:600; }
+        a:hover { text-decoration:underline; }
+        .meta { color:#8b949e; font-size:.9rem; }
+        code { background:#21262d; padding:.1rem .35rem; border-radius:5px; }
+        footer { margin-top:2rem; color:#8b949e; font-size:.85rem; }
+      </style>
+    </head>
+    <body>
+      <main>
+        <h1>Homelab</h1>
+        <p class="lead">Single-node k3s cluster on Apple Silicon, operated with GitOps, observability and SLOs.</p>
+        <ul>
+          <li>
+            <a href="https://status.avramukk.com">Status page →</a>
+            <div class="meta">Uptime Kuma · public</div>
+          </li>
+          <li>
+            <a href="https://demo.avramukk.com/api/items">Demo API →</a>
+            <div class="meta"><code>GET /api/items</code> · <code>POST /api/items</code> · <code>GET /api/slow?ms=250</code> · <code>GET /api/error</code> · public</div>
+          </li>
+          <li>
+            <a href="https://github.com/avramukk/homelab">Repository →</a>
+            <div class="meta">Architecture, ADRs, runbooks, GitOps manifests</div>
+          </li>
+        </ul>
+        <footer>
+          Grafana and Argo CD are private (Tailscale only): <code>ssh -N -L 3000:127.0.0.1:3000 lab-host 'kubectl -n observability port-forward svc/kube-prometheus-stack-grafana 3000:80'</code>
+        </footer>
+      </main>
+    </body>
+    </html>
