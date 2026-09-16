@@ -15,10 +15,17 @@ resource "cloudflare_zero_trust_tunnel_cloudflared" "homelab" {
   config_src = "cloudflare"
 }
 
+locals {
+  # Everything that gets a DNS record: served hostnames plus reserved ones.
+  dns_hostnames = toset(concat(keys(var.public_hostnames), tolist(var.reserved_hostnames)))
+}
+
 resource "cloudflare_zero_trust_tunnel_cloudflared_config" "homelab" {
   account_id = data.cloudflare_zone.this.account.id
   tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.homelab.id
 
+  # Only public_hostnames get an ingress rule. Anything else falls through to the
+  # catch-all 404, which is how a reserved hostname behaves until it has a service.
   config = {
     ingress = concat(
       [
@@ -36,10 +43,10 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "homelab" {
 }
 
 resource "cloudflare_dns_record" "public" {
-  for_each = var.public_hostnames
+  for_each = local.dns_hostnames
 
   zone_id = data.cloudflare_zone.this.id
-  name    = each.key
+  name    = each.value
   type    = "CNAME"
   content = "${cloudflare_zero_trust_tunnel_cloudflared.homelab.id}.cfargotunnel.com"
   proxied = true

@@ -15,7 +15,7 @@ by phase.
 - External: Cloudflare Tunnel `homelab` and `homelab.avramukk.com` fully managed by OpenTofu ([ADR-019](docs/adr/019-cloudflare-tunnel-in-opentofu.md), supersedes [ADR-018](docs/adr/018-cloudflare-tunnel-cli-opentofu-dns.md)).
 - cloudflared runs in-cluster (2 connectors, token in a `SealedSecret`); `homelab.avramukk.com` is live (catch-all 404 until a service is published).
 - Phase 3: observability stack — kube-prometheus-stack, Loki, Tempo, Alloy (logs→Loki, OTLP→Tempo), Grafana datasources as code, Uptime Kuma.
-- Published `homelab.avramukk.com` (Grafana, anonymous read-only) and `status.avramukk.com` (Uptime Kuma) through the tunnel.
+- Published `status.avramukk.com` (Uptime Kuma) through the tunnel. Grafana stays **private** (Tailscale only) and `homelab.avramukk.com` is reserved ([ADR-020](docs/adr/020-grafana-private.md)).
 
 ### Changed
 - Runtime pivoted from Talos-on-QEMU to k3s-via-k3d after macOS networking and

@@ -48,14 +48,23 @@ Add an entry to `public_hostnames` (subdomain → in-cluster Service URL) and ap
 
 ```hcl
 public_hostnames = {
-  "homelab" = "http://kube-prometheus-stack-grafana.observability.svc.cluster.local:80"
-  "status"  = "http://uptime-kuma.status.svc.cluster.local:3001"
+  "status" = "http://uptime-kuma.status.svc.cluster.local:3001"
 }
 ```
 
 Each entry creates a proxied CNAME **and** a matching tunnel ingress rule. The
 service URL must include the **actual Service port** (e.g. Uptime Kuma listens on
 `3001`, not `80`). `cloudflared` must be running in the cluster.
+
+To **reserve** a name without serving anything (the tunnel catch-all answers
+404), add it to `reserved_hostnames` instead:
+
+```hcl
+reserved_hostnames = ["homelab"]
+```
+
+Only put a service in `public_hostnames` when it is meant to be reachable by
+anyone — Grafana is deliberately private ([ADR-020](../docs/adr/020-grafana-private.md)).
 
 ## Known limitations
 

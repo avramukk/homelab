@@ -43,9 +43,11 @@ Rules:
 
 ## Dashboards
 
-| Dashboard | Audience | Notes |
-|---|---|---|
-| Service health (RED) | public | exported read-only via Cloudflare Tunnel |
-| Cluster / nodes (USE) | public | capacity and saturation |
-| SLO & error budget | public | burn-rate status |
-| Operations | operator | drill-down, dependency health |
+Grafana is **private** (Tailscale only, [ADR-020](../adr/020-grafana-private.md)).
+
+| Dashboard | Notes |
+|---|---|
+| Service health (RED) | per-service rate/errors/duration |
+| Cluster / nodes (USE) | capacity and saturation |
+| SLO & error budget | burn-rate status |
+| Operations | drill-down, dependency health |

@@ -18,10 +18,20 @@ variable "tunnel_name" {
 
 variable "public_hostnames" {
   description = <<-EOT
-    Subdomain → in-cluster Service mapping published through the tunnel.
+    Subdomain → in-cluster Service mapping actually served through the tunnel.
     Creates both the proxied CNAME and the tunnel ingress rule.
-    Example: { "status" = "http://uptime-kuma.status.svc.cluster.local:80" }
+    Keep this minimal: only services that are meant to be public.
+    Example: { "status" = "http://uptime-kuma.status.svc.cluster.local:3001" }
   EOT
   type        = map(string)
   default     = {}
+}
+
+variable "reserved_hostnames" {
+  description = <<-EOT
+    Subdomains that resolve through the tunnel but serve no service (the tunnel
+    catch-all answers 404). Use to reserve a name before its service exists.
+  EOT
+  type        = set(string)
+  default     = []
 }

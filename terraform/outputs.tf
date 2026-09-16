@@ -9,6 +9,11 @@ output "tunnel_id" {
 }
 
 output "public_hostnames" {
-  description = "Hostnames published through the tunnel."
+  description = "Hostnames actually served through the tunnel."
   value       = var.public_hostnames
+}
+
+output "reserved_hostnames" {
+  description = "Hostnames that resolve through the tunnel but serve no service (404)."
+  value       = var.reserved_hostnames
 }

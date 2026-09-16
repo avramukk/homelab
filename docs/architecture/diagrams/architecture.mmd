@@ -8,24 +8,30 @@ flowchart TB
   end
 
   subgraph host [lab-host · Apple Silicon M4 · 24 GiB]
-    subgraph talos [Talos Linux cluster · 1 control-plane + 2 workers]
+    subgraph k3s [k3s cluster · k3d · 1 server + 2 agents]
       traefik[Traefik ingress]
       argo[Argo CD]
       obs[Prometheus · Loki · Grafana · Tempo]
-      demo[demo service + PostgreSQL]
-      sealed[Sealed Secrets]
       kuma[Uptime Kuma]
+      sealed[Sealed Secrets]
+      cfd[cloudflared]
     end
     restic[(Restic repo · local disk)]
   end
 
   gh[GitHub · public repo]
   tg[Telegram]
+  op[Operator]
 
+  %% Public: status page only
   visitor -->|HTTPS| edge
-  edge -->|tunnel| traefik
+  edge -->|tunnel| cfd
+  cfd --> kuma
+
+  %% Private: operator over Tailscale
+  op -->|Tailscale| traefik
   traefik --> obs
-  traefik --> kuma
+
   argo -->|pull| gh
   obs --> restic
   obs -->|alerts| tg

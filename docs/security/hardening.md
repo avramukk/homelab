@@ -25,9 +25,9 @@
 
 ## Explicitly accepted risks
 
-- **Anonymous public Grafana.** Dashboards show operational metadata. They must
-  contain no secrets, no customer data, no internal hostnames beyond what is
-  already public. Datasource is locked to read-only.
+- **Grafana is private** ([ADR-020](../adr/020-grafana-private.md)). It is reachable
+  only over Tailscale; anonymous access is disabled. Only the status page is
+  public, and it discloses nothing beyond per-check up/down.
 - **Single-disk local backups.** Loss of the host loses the backup repository;
   offsite is planned. Documented in [ADR-010](../adr/010-backup-restic-local.md).
 

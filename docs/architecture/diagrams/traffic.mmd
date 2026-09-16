@@ -1,16 +1,15 @@
 flowchart LR
   subgraph private [Private · Tailscale]
-    operator[Operator] -->|talosctl / kubectl| api[Kubernetes API]
-    operator -->|Grafana| obs[Observability]
+    operator[Operator] -->|kubectl / port-forward| obs[Grafana · dashboards]
+    operator -->|talosctl / kubectl| api[Kubernetes API]
   end
 
-  subgraph public [Public · Cloudflare Tunnel]
-    visitor[Visitor] -->|grafana.domain| gt[Grafana read-only]
-    visitor -->|status.domain| status[Uptime Kuma]
+  subgraph public [Public · Cloudflare Tunnel · status only]
+    visitor[Visitor] -->|status.avramukk.com| kuma[Uptime Kuma]
   end
 
   cloudflared[cloudflared] -->|outbound only| cfedge[Cloudflare edge]
-  gt --- cloudflared
-  status --- cloudflared
+  kuma --- cloudflared
 
-  note[No inbound ports open on the host]
+  reserved[homelab.avramukk.com · reserved · 404]
+  note[No inbound ports open on the host. Grafana is never public (ADR-020).]
