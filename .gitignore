@@ -30,3 +30,8 @@ kubeconfig*
 
 # Tooling artifacts
 .playwright-mcp/
+
+# Agent project skills are part of the showcase.
+# Re-include here because a global ignore (~/.gitignore_global) excludes **/.opencode/.
+!.opencode/
+!.opencode/**
