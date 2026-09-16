@@ -1,0 +1,11 @@
+flowchart LR
+  dev[Change] -->|PR| gh[GitHub]
+  gh --> ci[GitHub Actions]
+  ci -->|markdownlint · mermaid · link-check| docs[docs validated]
+  ci -->|kubeconform · kustomize/helm lint| manifests[manifests validated]
+  ci -->|renovate PRs| gh
+  gh -->|merge to main| argo[Argo CD]
+  argo -->|sync| cluster[Kubernetes cluster]
+  cluster -->|/metrics /logs /traces| obs[Observability]
+  obs -->|SLO burn| alerts[Alertmanager]
+  alerts -->|page/ticket| tg[Telegram]

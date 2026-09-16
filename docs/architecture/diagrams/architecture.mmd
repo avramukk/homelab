@@ -1,0 +1,31 @@
+flowchart TB
+  subgraph internet [Internet]
+    visitor[Visitor]
+  end
+
+  subgraph cf [Cloudflare]
+    edge[Edge / TLS]
+  end
+
+  subgraph host [lab-host · Apple Silicon M4 · 24 GiB]
+    subgraph talos [Talos Linux cluster · 1 control-plane + 2 workers]
+      traefik[Traefik ingress]
+      argo[Argo CD]
+      obs[Prometheus · Loki · Grafana · Tempo]
+      demo[demo service + PostgreSQL]
+      sealed[Sealed Secrets]
+      kuma[Uptime Kuma]
+    end
+    restic[(Restic repo · local disk)]
+  end
+
+  gh[GitHub · public repo]
+  tg[Telegram]
+
+  visitor -->|HTTPS| edge
+  edge -->|tunnel| traefik
+  traefik --> obs
+  traefik --> kuma
+  argo -->|pull| gh
+  obs --> restic
+  obs -->|alerts| tg

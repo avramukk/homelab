@@ -1,0 +1,16 @@
+flowchart LR
+  subgraph private [Private · Tailscale]
+    operator[Operator] -->|talosctl / kubectl| api[Kubernetes API]
+    operator -->|Grafana| obs[Observability]
+  end
+
+  subgraph public [Public · Cloudflare Tunnel]
+    visitor[Visitor] -->|grafana.domain| gt[Grafana read-only]
+    visitor -->|status.domain| status[Uptime Kuma]
+  end
+
+  cloudflared[cloudflared] -->|outbound only| cfedge[Cloudflare edge]
+  gt --- cloudflared
+  status --- cloudflared
+
+  note[No inbound ports open on the host]
