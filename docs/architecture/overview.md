@@ -20,7 +20,7 @@ flowchart LR
   operator[Operator] -->|Tailscale| k8s
   gh[GitHub] -->|GitOps pull| argo[Argo CD]
   subgraph host [Cluster host - Apple Silicon]
-    subgraph k8s [Talos Linux cluster 1+2]
+    subgraph k8s [k3s cluster · k3d · 1 server + 2 agents]
       argo
     end
   end
@@ -30,7 +30,7 @@ flowchart LR
 
 | Layer | Component | State |
 |---|---|---|
-| Runtime | Talos Linux (1 control-plane + 2 workers) | Planned |
+| Runtime | k3s via k3d (1 server + 2 agents) | Running |
 | GitOps | Argo CD | Planned |
 | Ingress | Traefik | Planned |
 | Secrets | Sealed Secrets | Planned |

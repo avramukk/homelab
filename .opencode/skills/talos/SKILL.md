@@ -5,6 +5,11 @@ description: Operate a Talos Linux Kubernetes cluster created with `talosctl clu
 
 # Talos Linux
 
+> **Deferred on the current host.** macOS `vmnet-shared` does not deliver DHCPv4
+> to Talos guests and Talos-in-Docker is incompatible with the Colima kernel, so
+> the running cluster is k3s via k3d ([ADR-016](../../docs/adr/016-runtime-k3s-k3d.md)).
+> This skill is retained for the planned Talos-on-Linux/bare-metal target.
+
 Talos has **no shell and no SSH**. Every node operation goes through the Talos
 API via `talosctl`. Do not expect `ssh` or `kubectl` to work for node-level
 actions.

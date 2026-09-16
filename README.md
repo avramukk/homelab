@@ -18,7 +18,7 @@ backups, and documented decisions.
 
 ## How it is built
 
-- **Runtime:** Talos Linux, 1 control-plane + 2 workers ([ADR-001](docs/adr/001-runtime-talos-linux.md), [ADR-002](docs/adr/002-cluster-topology.md))
+- **Runtime:** k3s via k3d, 1 server + 2 agents ([ADR-016](docs/adr/016-runtime-k3s-k3d.md), [ADR-002](docs/adr/002-cluster-topology.md))
 - **GitOps:** Argo CD ([ADR-003](docs/adr/003-gitops-argocd.md))
 - **CI:** GitHub Actions ([ADR-004](docs/adr/004-ci-github-actions.md))
 - **Observability:** self-hosted LGTM + OpenTelemetry ([ADR-007](docs/adr/007-observability-lgtm-otel.md))
