@@ -7,5 +7,5 @@ by phase.
 ## [Unreleased]
 
 ### Added
-- Planning backlog (`INBOX.md`) and documentation architecture (`docs/`).
+- Documentation architecture (`docs/`).
 - Architecture Decision Records 001–015.

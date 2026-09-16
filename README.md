@@ -15,7 +15,6 @@ backups, and documented decisions.
 | See **why** things are built this way | [`docs/adr/`](docs/adr/) |
 | Operate it (SLOs, backups, on-call) | [`docs/operations/`](docs/operations/) |
 | Fix something at 2am | [`docs/runbooks/`](docs/runbooks/) |
-| Read the raw idea backlog | [`INBOX.md`](INBOX.md) |
 
 ## How it is built
 

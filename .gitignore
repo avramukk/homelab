@@ -31,6 +31,9 @@ kubeconfig*
 # Local task tracking (never committed)
 TODO-*.md
 
+# Personal backlog/scratchpad (kept local, not part of the public repo)
+INBOX.md
+
 # Tooling artifacts
 .playwright-mcp/
 
