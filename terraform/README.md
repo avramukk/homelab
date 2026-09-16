@@ -44,10 +44,18 @@ tofu apply
 
 ## Publishing a hostname
 
-1. Add the subdomain to `public_hostnames`, `tofu apply` (creates the CNAME).
-2. Add the matching ingress rule in `cloudflare_zero_trust_tunnel_cloudflared_config`
-   in `main.tf`, `tofu apply`.
-3. Ensure `cloudflared` runs in the cluster and its token matches this tunnel.
+Add an entry to `public_hostnames` (subdomain → in-cluster Service URL) and apply:
+
+```hcl
+public_hostnames = {
+  "homelab" = "http://kube-prometheus-stack-grafana.observability.svc.cluster.local:80"
+  "status"  = "http://uptime-kuma.status.svc.cluster.local:3001"
+}
+```
+
+Each entry creates a proxied CNAME **and** a matching tunnel ingress rule. The
+service URL must include the **actual Service port** (e.g. Uptime Kuma listens on
+`3001`, not `80`). `cloudflared` must be running in the cluster.
 
 ## Known limitations
 

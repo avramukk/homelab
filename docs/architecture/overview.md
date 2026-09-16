@@ -34,8 +34,8 @@ flowchart LR
 | GitOps | Argo CD | Running |
 | Ingress | Traefik | Planned |
 | Secrets | Sealed Secrets | Planned |
-| Observability | Prometheus, Loki, Grafana, Tempo, OpenTelemetry, Alloy | Planned |
-| Status | Uptime Kuma | Planned |
+| Observability | Prometheus, Loki, Grafana, Tempo, OpenTelemetry, Alloy | Running |
+| Status | Uptime Kuma | Running |
 | Public edge | Cloudflare Tunnel | Running |
 | Demo workload | Go CRUD service + PostgreSQL, OTel-instrumented | Planned |
 | Alerts | Alertmanager → Telegram (page/ticket) | Planned |
