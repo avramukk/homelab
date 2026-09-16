@@ -8,8 +8,9 @@
 A **production-grade SRE homelab**: a single-cluster Kubernetes environment built
 and operated with the practices you would expect in production — immutable OS,
 GitOps, observability, SLOs, tested backups, and documented decisions. It doubles
-as a public showcase: the **repository and the status page** are public, while
-dashboards stay private ([ADR-020](../adr/020-grafana-private.md)).
+as a public showcase: the **repository**, the **status page** and the **demo API**
+are public, while dashboards stay private
+([ADR-020](../adr/020-grafana-private.md), [ADR-021](../adr/021-publish-demo-api.md)).
 
 ## Context
 

@@ -28,6 +28,9 @@
 - **Grafana is private** ([ADR-020](../adr/020-grafana-private.md)). It is reachable
   only over Tailscale; anonymous access is disabled. Only the status page is
   public, and it discloses nothing beyond per-check up/down.
+- **Public demo API** (`demo.avramukk.com`, [ADR-021](../adr/021-publish-demo-api.md)).
+  It exposes a write endpoint and a forced-error endpoint, and its data is
+  disposable. Mitigations (Cloudflare Access, rate limiting) are deferred.
 - **Single-disk local backups.** Loss of the host loses the backup repository;
   offsite is planned. Documented in [ADR-010](../adr/010-backup-restic-local.md).
 
