@@ -1,0 +1,105 @@
+# SLO and burn-rate rules for the demo service (ADR-009).
+#
+# SLOs (see docs/operations/observability.md):
+#   availability >= 99.5%   (error budget 0.5%)
+#   latency p95  < 300 ms
+# Multi-window burn-rate: fast burn pages, slow burn tickets.
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: demo-slo
+  labels:
+    app.kubernetes.io/name: demo
+    # Selected by the kube-prometheus-stack Prometheus (release label).
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: demo.slo.recording
+      interval: 30s
+      rules:
+        # Error ratio = 5xx / total, over the burn-rate windows.
+        - record: demo:error_ratio:rate5m
+          expr: |
+            sum(rate(http_requests_total{job="demo", status_class="5xx"}[5m]))
+            /
+            sum(rate(http_requests_total{job="demo"}[5m]))
+        - record: demo:error_ratio:rate30m
+          expr: |
+            sum(rate(http_requests_total{job="demo", status_class="5xx"}[30m]))
+            /
+            sum(rate(http_requests_total{job="demo"}[30m]))
+        - record: demo:error_ratio:rate1h
+          expr: |
+            sum(rate(http_requests_total{job="demo", status_class="5xx"}[1h]))
+            /
+            sum(rate(http_requests_total{job="demo"}[1h]))
+        - record: demo:error_ratio:rate6h
+          expr: |
+            sum(rate(http_requests_total{job="demo", status_class="5xx"}[6h]))
+            /
+            sum(rate(http_requests_total{job="demo"}[6h]))
+        - record: demo:latency_p95:rate10m
+          expr: |
+            histogram_quantile(0.95,
+              sum(rate(http_request_duration_seconds_bucket{job="demo"}[10m])) by (le)
+            )
+
+    - name: demo.slo.alerts
+      rules:
+        # Fast burn: 14.4x the 0.5% budget over 1h, confirmed by 5m. Page.
+        - alert: DemoErrorBudgetFastBurn
+          expr: |
+            (
+              demo:error_ratio:rate1h > (14.4 * 0.005)
+              and
+              demo:error_ratio:rate5m > (14.4 * 0.005)
+            )
+          for: 2m
+          labels:
+            severity: page
+            service: demo
+          annotations:
+            summary: "demo is burning its error budget fast"
+            description: "1h error ratio {{ $value | humanizePercentage }} (budget 0.5%, fast-burn threshold 7.2%)."
+            runbook_url: "https://github.com/avramukk/homelab/blob/main/docs/runbooks/demo-slo.md"
+
+        # Slow burn: 6x the budget over 6h, confirmed by 30m. Ticket.
+        - alert: DemoErrorBudgetSlowBurn
+          expr: |
+            (
+              demo:error_ratio:rate6h > (6 * 0.005)
+              and
+              demo:error_ratio:rate30m > (6 * 0.005)
+            )
+          for: 15m
+          labels:
+            severity: ticket
+            service: demo
+          annotations:
+            summary: "demo is burning its error budget steadily"
+            description: "6h error ratio is above 3% (budget 0.5%)."
+            runbook_url: "https://github.com/avramukk/homelab/blob/main/docs/runbooks/demo-slo.md"
+
+        # Symptom: latency SLO breach. Ticket.
+        - alert: DemoLatencyHigh
+          expr: demo:latency_p95:rate10m > 0.3
+          for: 10m
+          labels:
+            severity: ticket
+            service: demo
+          annotations:
+            summary: "demo p95 latency above the 300ms SLO"
+            description: "p95 over 10m is {{ $value | humanizeDuration }}."
+            runbook_url: "https://github.com/avramukk/homelab/blob/main/docs/runbooks/demo-slo.md"
+
+        # Symptom: the service is not scrapeable at all. Page.
+        - alert: DemoDown
+          expr: up{job="demo"} == 0
+          for: 2m
+          labels:
+            severity: page
+            service: demo
+          annotations:
+            summary: "demo target is down"
+            description: "Prometheus cannot scrape any demo replica."
+            runbook_url: "https://github.com/avramukk/homelab/blob/main/docs/runbooks/demo-slo.md"

@@ -22,6 +22,7 @@ to the runbook that resolves it.
 | [talos-upgrade.md](talos-upgrade.md) | upgrading Talos / Kubernetes | — (planned maintenance) |
 | [cluster-recovery.md](cluster-recovery.md) | cluster or node down / rebuild | `ClusterUnavailable` |
 | [restore.md](restore.md) | restoring from Restic | `BackupFailed` |
+| [demo-slo.md](demo-slo.md) | demo service error-budget / latency / down | `DemoErrorBudgetFastBurn`, `DemoErrorBudgetSlowBurn`, `DemoLatencyHigh`, `DemoDown` |
 | [cloudflare-tunnel.md](cloudflare-tunnel.md) | public dashboard unreachable | `PublicDashboardDown` |
 | [argocd-bootstrap.md](argocd-bootstrap.md) | re-bootstrapping GitOps | `ArgoCDOutOfSync` |
 
