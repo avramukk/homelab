@@ -19,6 +19,7 @@ by phase.
 - Phase 4 (partial): demo Go + PostgreSQL service deployed via Argo CD, OTel-instrumented (RED metrics, structured logs, OTLP traces) and scraped by Prometheus. Image built multi-arch in CI and published to GHCR.
 - SLO recording + multi-window burn-rate rules with runbooks ([ADR-009](docs/adr/009-alerting-telegram-slo.md)).
 - Demo API published at `demo.avramukk.com` through the tunnel ([ADR-021](docs/adr/021-publish-demo-api.md)); Grafana remains private.
+- Grafana dashboards as code: Demo RED, Demo SLO / error budget, Cluster and Stack health (provisioned via labelled ConfigMaps).
 
 ### Changed
 - Runtime pivoted from Talos-on-QEMU to k3s-via-k3d after macOS networking and
