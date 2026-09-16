@@ -35,3 +35,5 @@ Scopes used here: `adr` `docs` `cluster` `gitops` `observability` `security` `te
 - **No secrets in Git.** Sealed Secrets ciphertext only.
 - Never commit `talosconfig`, machine secrets, `kubeconfig`, or `.env` files.
 - Sign your commits (SSH signing is configured in this repo).
+- **Scan before pushing:** the `gitleaks` workflow runs on every push/PR and
+  weekly; to check locally, run `gitleaks git .` from the repo root.

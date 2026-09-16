@@ -33,6 +33,7 @@
 
 ## Verification
 
+- `gitleaks git .` — no secrets in history or tree
 - `kubectl get ns -L pod-security.kubernetes.io/enforce`
 - `kubectl get clusterpolicy` (Kyverno)
 - Trivy report attached to the relevant CI run
