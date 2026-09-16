@@ -37,7 +37,7 @@ flowchart LR
 | Observability | Prometheus, Loki, Grafana, Tempo, OpenTelemetry, Alloy | Running |
 | Status | Uptime Kuma | Running |
 | Public edge | Cloudflare Tunnel | Running |
-| Demo workload | Go CRUD service + PostgreSQL, OTel-instrumented | Planned |
+| Demo workload | Go CRUD service + PostgreSQL, OTel-instrumented | Running |
 | Alerts | Alertmanager → Telegram (page/ticket) | Planned |
 | Backup | Restic → local disk (B2 deferred) | Planned |
 | IaC | OpenTofu (Cloudflare DNS, Tailscale) | Planned |

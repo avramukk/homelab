@@ -16,6 +16,7 @@ by phase.
 - cloudflared runs in-cluster (2 connectors, token in a `SealedSecret`); `homelab.avramukk.com` is live (catch-all 404 until a service is published).
 - Phase 3: observability stack — kube-prometheus-stack, Loki, Tempo, Alloy (logs→Loki, OTLP→Tempo), Grafana datasources as code, Uptime Kuma.
 - Published `status.avramukk.com` (Uptime Kuma) through the tunnel. Grafana stays **private** (Tailscale only) and `homelab.avramukk.com` is reserved ([ADR-020](docs/adr/020-grafana-private.md)).
+- Phase 4 (partial): demo Go + PostgreSQL service deployed via Argo CD, OTel-instrumented (RED metrics, structured logs, OTLP traces) and scraped by Prometheus. Image built multi-arch in CI and published to GHCR.
 
 ### Changed
 - Runtime pivoted from Talos-on-QEMU to k3s-via-k3d after macOS networking and
