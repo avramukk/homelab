@@ -1,0 +1,13 @@
+# Copy this file to terraform.tfvars (gitignored) and fill in real values.
+# NEVER commit a token.
+
+cloudflare_api_token = "replace-with-cloudflare-api-token"
+zone_name            = "avramukk.com"
+tunnel_name          = "homelab"
+
+# Publish a service through the tunnel only once it exists.
+# Each entry: <subdomain> = <in-cluster Service URL>
+# public_hostnames = {
+#   "status"  = "http://uptime-kuma.status.svc.cluster.local:80"
+#   "grafana" = "http://grafana.observability.svc.cluster.local:80"
+# }
