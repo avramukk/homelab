@@ -1,13 +1,34 @@
-# NOTE: k3s' default CNI (flannel) does NOT enforce NetworkPolicy. These policies
-# declare intent and become effective once a policy-capable CNI (Cilium) is
-# installed per ADR-012. Until then they are documentation, not enforcement.
+# NOTE: k3s ships a NetworkPolicy controller (kube-router) by default, so these
+# policies ARE enforced even though the CNI is flannel. This is why the demo
+# service failed to reach PostgreSQL until the postgres ingress rule below existed.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: default-deny
+  labels:
+    app.kubernetes.io/part-of: homelab
 spec:
   podSelector: {}
   policyTypes: [Ingress, Egress]
+---
+# PostgreSQL accepts connections from the demo service only.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: postgres
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: demo
+      ports:
+        - port: 5432
+          protocol: TCP
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
