@@ -42,7 +42,7 @@ What becomes easier, what becomes harder, what we accept as a known limitation.
 
 | ADR | Title | Status |
 |---|---|---|
-| [001](001-runtime-talos-linux.md) | Cluster runtime: Talos Linux over Colima/k3s | Accepted |
+| [001](001-runtime-talos-linux.md) | Cluster runtime: Talos Linux over Colima/k3s | Superseded by [016](016-runtime-k3s-k3d.md) |
 | [002](002-cluster-topology.md) | Cluster topology: 1 control-plane + 2 workers | Accepted |
 | [003](003-gitops-argocd.md) | GitOps controller: Argo CD | Accepted |
 | [004](004-ci-github-actions.md) | CI: GitHub Actions | Accepted |
@@ -57,3 +57,4 @@ What becomes easier, what becomes harder, what we accept as a known limitation.
 | [013](013-docs-and-history-conventions.md) | Documentation and git-history conventions | Accepted |
 | [014](014-incident-drill.md) | Deliberate incident drill and postmortem | Accepted |
 | [015](015-repository-layout.md) | Monorepo layout | Accepted |
+| [016](016-runtime-k3s-k3d.md) | Cluster runtime: k3s via k3d (Talos deferred) | Accepted |

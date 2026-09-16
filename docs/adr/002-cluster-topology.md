@@ -1,7 +1,8 @@
 # ADR-002: Cluster topology — 1 control-plane + 2 workers
 
 ## Status
-Accepted
+Accepted — provisioning superseded by [ADR-016](016-runtime-k3s-k3d.md); the node
+count and roles below are unchanged.
 
 ## Date
 2026-09-16

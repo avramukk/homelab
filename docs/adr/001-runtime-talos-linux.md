@@ -1,7 +1,7 @@
 # ADR-001: Cluster runtime — Talos Linux over Colima/k3s
 
 ## Status
-Accepted
+Superseded by [ADR-016](016-runtime-k3s-k3d.md)
 
 ## Date
 2026-09-16
