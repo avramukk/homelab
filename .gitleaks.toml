@@ -1,0 +1,12 @@
+# gitleaks configuration.
+# Extend the default ruleset and allowlist Sealed Secrets ciphertext: the
+# `encryptedData` values of a SealedSecret are encrypted to the in-cluster
+# controller key and are safe to commit (ADR-005).
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Sealed Secrets ciphertext (encrypted, not a secret)"
+paths = [
+  '''infra/.*sealedsecret.*\.ya?ml$''',
+]
