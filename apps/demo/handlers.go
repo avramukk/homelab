@@ -14,13 +14,14 @@ func writeJSON(w http.ResponseWriter, status int, v any) {
 	_ = json.NewEncoder(w).Encode(v)
 }
 
-func handleListItems(store *store, logger *slog.Logger) http.HandlerFunc {
+func handleListItems(conn *connector, logger *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if store == nil {
+		s := conn.get(r.Context())
+		if s == nil {
 			http.Error(w, "database unavailable", http.StatusServiceUnavailable)
 			return
 		}
-		items, err := store.ListItems(r.Context())
+		items, err := s.ListItems(r.Context())
 		if err != nil {
 			logger.Error("list items failed", "event", "items_list_failed", "error", err)
 			http.Error(w, "internal error", http.StatusInternalServerError)
@@ -30,12 +31,13 @@ func handleListItems(store *store, logger *slog.Logger) http.HandlerFunc {
 	}
 }
 
-func handleCreateItem(store *store, logger *slog.Logger) http.HandlerFunc {
+func handleCreateItem(conn *connector, logger *slog.Logger) http.HandlerFunc {
 	type request struct {
 		Name string `json:"name"`
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		if store == nil {
+		s := conn.get(r.Context())
+		if s == nil {
 			http.Error(w, "database unavailable", http.StatusServiceUnavailable)
 			return
 		}
@@ -44,7 +46,7 @@ func handleCreateItem(store *store, logger *slog.Logger) http.HandlerFunc {
 			http.Error(w, "invalid body: name is required", http.StatusBadRequest)
 			return
 		}
-		it, err := store.CreateItem(r.Context(), req.Name)
+		it, err := s.CreateItem(r.Context(), req.Name)
 		if err != nil {
 			logger.Error("create item failed", "event", "item_create_failed", "error", err)
 			http.Error(w, "internal error", http.StatusInternalServerError)

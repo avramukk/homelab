@@ -37,18 +37,14 @@ func main() {
 	registry.MustRegister(collectors.NewGoCollector(), collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}))
 	metrics := newMetrics(registry)
 
-	// --- Database (optional at boot; readiness reports it) -----------------
-	store, err := newStore(ctx, os.Getenv("DATABASE_URL"))
-	if err != nil {
-		logger.Warn("database not ready at startup", "event", "db_unavailable", "error", err)
-	}
-	if store != nil {
-		defer store.Close()
-	}
+	// --- Database (retried in the background; readiness reports it) --------
+	conn := newConnector(os.Getenv("DATABASE_URL"))
+	go conn.run(ctx, logger)
+	defer conn.Close()
 
 	// --- HTTP --------------------------------------------------------------
 	mux := http.NewServeMux()
-	registerHandlers(mux, store, metrics, logger)
+	registerHandlers(mux, conn, metrics, logger)
 
 	handler := instrument(mux, metrics, logger)
 
@@ -75,14 +71,14 @@ func main() {
 
 // registerHandlers wires every route. Kept in one place so the metric route
 // labels stay in sync with the actual paths.
-func registerHandlers(mux *http.ServeMux, store *store, metrics *metrics, logger *slog.Logger) {
+func registerHandlers(mux *http.ServeMux, conn *connector, metrics *metrics, logger *slog.Logger) {
 	mux.HandleFunc("GET /healthz/live", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte("ok"))
 	})
 
 	mux.HandleFunc("GET /healthz/ready", func(w http.ResponseWriter, r *http.Request) {
-		if store == nil || store.Ping(r.Context()) != nil {
+		if s := conn.get(r.Context()); s == nil || s.Ping(r.Context()) != nil {
 			http.Error(w, "database not ready", http.StatusServiceUnavailable)
 			return
 		}
@@ -90,8 +86,8 @@ func registerHandlers(mux *http.ServeMux, store *store, metrics *metrics, logger
 		_, _ = w.Write([]byte("ready"))
 	})
 
-	mux.HandleFunc("GET /api/items", handleListItems(store, logger))
-	mux.HandleFunc("POST /api/items", handleCreateItem(store, logger))
+	mux.HandleFunc("GET /api/items", handleListItems(conn, logger))
+	mux.HandleFunc("POST /api/items", handleCreateItem(conn, logger))
 	mux.HandleFunc("GET /api/slow", handleSlow(logger))
 	mux.HandleFunc("GET /api/error", handleError(logger))
 

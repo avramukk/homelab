@@ -29,7 +29,7 @@ func TestRouteTemplateBoundsCardinality(t *testing.T) {
 
 func TestHealthzLive(t *testing.T) {
 	mux := http.NewServeMux()
-	registerHandlers(mux, nil, newMetricsForTest(), slog.Default())
+	registerHandlers(mux, newConnector(""), newMetricsForTest(), slog.Default())
 
 	req := httptest.NewRequest(http.MethodGet, "/healthz/live", nil)
 	rec := httptest.NewRecorder()
@@ -42,7 +42,7 @@ func TestHealthzLive(t *testing.T) {
 
 func TestReadyWithoutDatabaseIs503(t *testing.T) {
 	mux := http.NewServeMux()
-	registerHandlers(mux, nil, newMetricsForTest(), slog.Default())
+	registerHandlers(mux, newConnector(""), newMetricsForTest(), slog.Default())
 
 	req := httptest.NewRequest(http.MethodGet, "/healthz/ready", nil)
 	rec := httptest.NewRecorder()
@@ -55,7 +55,7 @@ func TestReadyWithoutDatabaseIs503(t *testing.T) {
 
 func TestErrorEndpointIs500(t *testing.T) {
 	mux := http.NewServeMux()
-	registerHandlers(mux, nil, newMetricsForTest(), slog.Default())
+	registerHandlers(mux, newConnector(""), newMetricsForTest(), slog.Default())
 
 	req := httptest.NewRequest(http.MethodGet, "/api/error", nil)
 	rec := httptest.NewRecorder()
@@ -69,7 +69,7 @@ func TestErrorEndpointIs500(t *testing.T) {
 func TestCreateItemRejectsInvalidBody(t *testing.T) {
 	mux := http.NewServeMux()
 	// store is non-nil only in shape; validation runs before any DB call.
-	registerHandlers(mux, nil, newMetricsForTest(), slog.Default())
+	registerHandlers(mux, newConnector(""), newMetricsForTest(), slog.Default())
 
 	req := httptest.NewRequest(http.MethodPost, "/api/items", http.NoBody)
 	rec := httptest.NewRecorder()

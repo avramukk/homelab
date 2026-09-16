@@ -5,6 +5,8 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"errors"
+	"log/slog"
+	"sync"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -12,6 +14,66 @@ import (
 
 type store struct {
 	pool *pgxpool.Pool
+}
+
+// connector holds the (possibly not-yet-established) database handle. It keeps
+// startup order-independent: the app becomes ready once Postgres is reachable,
+// instead of failing permanently if it boots first.
+type connector struct {
+	dsn string
+
+	mu    sync.RWMutex
+	store *store
+}
+
+func newConnector(dsn string) *connector { return &connector{dsn: dsn} }
+
+// get returns a live store, attempting a connection if none exists yet.
+func (c *connector) get(ctx context.Context) *store {
+	c.mu.RLock()
+	s := c.store
+	c.mu.RUnlock()
+	if s != nil {
+		return s
+	}
+
+	ns, err := newStore(ctx, c.dsn)
+	if err != nil {
+		return nil
+	}
+
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if c.store != nil { // lost the race
+		ns.Close()
+		return c.store
+	}
+	c.store = ns
+	return c.store
+}
+
+// run retries until the database is reachable, then returns. The pool handles
+// later reconnects on its own.
+func (c *connector) run(ctx context.Context, logger *slog.Logger) {
+	for {
+		if c.get(ctx) != nil {
+			logger.Info("database connected", "event", "db_connected")
+			return
+		}
+		select {
+		case <-ctx.Done():
+			return
+		case <-time.After(5 * time.Second):
+		}
+	}
+}
+
+func (c *connector) Close() {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if c.store != nil {
+		c.store.Close()
+	}
 }
 
 type item struct {
