@@ -44,6 +44,21 @@ grafana:
   # Admin credentials come from a SealedSecret (keys: admin-user, admin-password).
   admin:
     existingSecret: grafana-admin
+  # Datasources as code. Prometheus is added by the chart as the default.
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      url: http://loki-gateway.observability.svc.cluster.local
+      access: proxy
+      jsonData:
+        maxLines: 1000
+    - name: Tempo
+      type: tempo
+      url: http://tempo.observability.svc.cluster.local:3100
+      access: proxy
+      jsonData:
+        nodeGraph:
+          enabled: true
   resources:
     requests:
       cpu: 50m
