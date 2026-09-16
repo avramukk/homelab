@@ -19,7 +19,7 @@ flowchart LR
   cf -->|tunnel, no inbound ports| k8s
   operator[Operator] -->|Tailscale| k8s
   gh[GitHub] -->|GitOps pull| argo[Argo CD]
-  subgraph host [Mac mini-class host - "lab-host"]
+  subgraph host [Cluster host - Apple Silicon]
     subgraph k8s [Talos Linux cluster 1+2]
       argo
     end

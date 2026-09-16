@@ -7,9 +7,9 @@
 
 | Property | Value |
 |---|---|
-| Machine | `lab-host` — Apple Silicon (M4), 14 vCPU / 24 GiB RAM |
+| Machine | Cluster host (`lab-host`) — Apple Silicon (M4), 14 vCPU / 24 GiB RAM |
 | OS | macOS (host only; Kubernetes runs inside Talos Linux VMs) |
-| Access | Tailscale (`100.x.x.x`) + SSH (`~/.ssh/config` → `Host lab-host`) |
+| Access | Tailscale (private tailnet) + SSH |
 | VM driver | `talosctl cluster create` (QEMU, scriptable) |
 
 ## Topology
