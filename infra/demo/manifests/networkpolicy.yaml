@@ -40,7 +40,8 @@ spec:
       app.kubernetes.io/name: demo
   policyTypes: [Ingress, Egress]
   ingress:
-    # Prometheus scrapes /metrics; an ingress controller may front the API.
+    # Prometheus scrapes /metrics; an ingress controller may front the API;
+    # cloudflared reaches it for the public hostname.
     - from:
         - namespaceSelector:
             matchLabels:
@@ -48,6 +49,9 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: traefik
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cloudflare
       ports:
         - port: 8080
           protocol: TCP
