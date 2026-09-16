@@ -26,6 +26,12 @@ spec:
       path: infra/observability/manifests
       directory:
         recurse: true
+    # Grafana dashboards as code (ConfigMaps labelled grafana_dashboard=1).
+    - repoURL: https://github.com/avramukk/homelab.git
+      targetRevision: main
+      path: infra/observability/dashboards
+      directory:
+        recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: observability

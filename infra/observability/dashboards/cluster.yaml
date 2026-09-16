@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dashboard-cluster
+  namespace: observability
+  labels:
+    grafana_dashboard: "1"
+  annotations:
+    grafana_folder: Homelab
+data:
+  cluster.json: |
+    {
+      "title": "Cluster · nodes & workloads",
+      "uid": "cluster",
+      "schemaVersion": 39,
+      "refresh": "30s",
+      "time": { "from": "now-6h", "to": "now" },
+      "tags": ["cluster"],
+      "panels": [
+        {
+          "id": 1,
+          "type": "stat",
+          "title": "Nodes ready",
+          "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
+          "fieldConfig": { "defaults": { "unit": "none", "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "green", "value": 3 } ] } }, "overrides": [] },
+          "targets": [ { "expr": "sum(kube_node_status_condition{condition=\"Ready\",status=\"true\"})", "legendFormat": "ready" } ]
+        },
+        {
+          "id": 2,
+          "type": "stat",
+          "title": "CPU utilisation",
+          "gridPos": { "h": 6, "w": 6, "x": 6, "y": 0 },
+          "fieldConfig": { "defaults": { "unit": "percentunit", "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "orange", "value": 0.8 } ] } }, "overrides": [] },
+          "targets": [ { "expr": "1 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m]))", "legendFormat": "cpu" } ]
+        },
+        {
+          "id": 3,
+          "type": "stat",
+          "title": "Memory utilisation",
+          "gridPos": { "h": 6, "w": 6, "x": 12, "y": 0 },
+          "fieldConfig": { "defaults": { "unit": "percentunit", "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "orange", "value": 0.85 } ] } }, "overrides": [] },
+          "targets": [ { "expr": "1 - (sum(node_memory_MemAvailable_bytes) / sum(node_memory_MemTotal_bytes))", "legendFormat": "mem" } ]
+        },
+        {
+          "id": 4,
+          "type": "stat",
+          "title": "Running pods",
+          "gridPos": { "h": 6, "w": 6, "x": 18, "y": 0 },
+          "fieldConfig": { "defaults": { "unit": "none" }, "overrides": [] },
+          "targets": [ { "expr": "sum(kube_pod_status_phase{phase=\"Running\"})", "legendFormat": "running" } ]
+        },
+        {
+          "id": 5,
+          "type": "timeseries",
+          "title": "CPU utilisation by node",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
+          "fieldConfig": { "defaults": { "unit": "percentunit" }, "overrides": [] },
+          "targets": [ { "expr": "1 - avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m]))", "legendFormat": "{{instance}}" } ]
+        },
+        {
+          "id": 6,
+          "type": "timeseries",
+          "title": "Memory available by node",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 },
+          "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] },
+          "targets": [ { "expr": "node_memory_MemAvailable_bytes", "legendFormat": "{{instance}}" } ]
+        },
+        {
+          "id": 7,
+          "type": "timeseries",
+          "title": "Top pods by memory (working set)",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
+          "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] },
+          "targets": [ { "expr": "topk(8, sum by (namespace, pod) (container_memory_working_set_bytes{container!=\"\", namespace!=\"\"}))", "legendFormat": "{{namespace}}/{{pod}}" } ]
+        },
+        {
+          "id": 8,
+          "type": "timeseries",
+          "title": "Container restarts (increase over 1h)",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
+          "fieldConfig": { "defaults": { "unit": "none" }, "overrides": [] },
+          "targets": [ { "expr": "sum by (namespace, pod) (increase(kube_pod_container_status_restarts_total[1h]))", "legendFormat": "{{namespace}}/{{pod}}" } ]
+        }
+      ]
+    }
