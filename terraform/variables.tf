@@ -1,5 +1,5 @@
 variable "cloudflare_api_token" {
-  description = "Cloudflare API token with DNS:Edit and Cloudflare Tunnel:Edit permissions for the zone."
+  description = "Cloudflare API token with Zone → DNS → Edit (and Zone → Zone → Read) for the zone."
   type        = string
   sensitive   = true
 }
@@ -10,18 +10,17 @@ variable "zone_name" {
   default     = "avramukk.com"
 }
 
-variable "tunnel_name" {
-  description = "Name of the Cloudflare Tunnel used by cloudflared in the cluster."
+variable "tunnel_id" {
+  description = <<-EOT
+    Cloudflare Tunnel id created with the cloudflared CLI
+    (`cloudflared tunnel create homelab`). DNS records point at
+    "<tunnel_id>.cfargotunnel.com".
+  EOT
   type        = string
-  default     = "homelab"
 }
 
 variable "public_hostnames" {
-  description = <<-EOT
-    Hostname → in-cluster Service mappings published through the tunnel.
-    Empty until a service actually exists (currently: DNS/tunnel only).
-    Example: { "status" = "http://uptime-kuma.status.svc.cluster.local:80" }
-  EOT
-  type        = map(string)
-  default     = {}
+  description = "Subdomains under zone_name published through the tunnel (DNS records only)."
+  type        = set(string)
+  default     = []
 }
