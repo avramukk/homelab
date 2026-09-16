@@ -1,0 +1,32 @@
+# macOS
+.DS_Store
+
+# Secrets — never commit
+*.credentials*
+.credentials*
+**/secrets/
+*.pem
+*.key
+.env
+.env.*
+
+# Terraform / OpenTofu
+*.tfstate
+*.tfstate.*
+.terraform/
+*.tfvars
+!*.tfvars.example
+
+# Helm / kubeconfig
+kubeconfig*
+*.kubeconfig
+
+# Editors / OS
+*.swp
+*.swo
+.idea/
+.vscode/
+*.tmp
+
+# Tooling artifacts
+.playwright-mcp/
