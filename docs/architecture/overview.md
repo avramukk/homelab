@@ -31,7 +31,7 @@ flowchart LR
 | Layer | Component | State |
 |---|---|---|
 | Runtime | k3s via k3d (1 server + 2 agents) | Running |
-| GitOps | Argo CD | Planned |
+| GitOps | Argo CD | Running |
 | Ingress | Traefik | Planned |
 | Secrets | Sealed Secrets | Planned |
 | Observability | Prometheus, Loki, Grafana, Tempo, OpenTelemetry, Alloy | Planned |

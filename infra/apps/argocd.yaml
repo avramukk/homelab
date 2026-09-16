@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    # Manage the controller after the imperative bootstrap (ADR-017).
+    argocd.argoproj.io/sync-wave: "-5"
+spec:
+  project: default
+  sources:
+    # Upstream Helm chart (pinned to the version installed at bootstrap).
+    - repoURL: https://argoproj.github.io/argo-helm
+      chart: argo-cd
+      targetRevision: 10.9.1
+      helm:
+        releaseName: argocd
+        valueFiles:
+          - $values/infra/bootstrap/argocd-values.yaml
+    # Values come from this repository.
+    - repoURL: https://github.com/avramukk/homelab.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 5m

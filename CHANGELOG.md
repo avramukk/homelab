@@ -10,6 +10,7 @@ by phase.
 - Documentation architecture (`docs/`).
 - ADRs 001–016.
 - Phase 1: multi-node Kubernetes cluster — k3s v1.35.5 via k3d (1 server + 2 agents) on Colima.
+- Phase 2: Argo CD bootstrapped (chart `argo-cd` 10.9.1) and self-managed from Git; app-of-apps root in `infra/apps` ([ADR-017](docs/adr/017-argocd-bootstrap.md)).
 
 ### Changed
 - Runtime pivoted from Talos-on-QEMU to k3s-via-k3d after macOS networking and
