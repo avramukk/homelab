@@ -1,0 +1,32 @@
+# Traefik ingress — GitOps-managed instance.
+# k3s' bundled Traefik is disabled at cluster creation (ADR-016); this replaces it.
+# Rationale for Traefik over ingress-nginx (retired March 2026): ADR-006.
+deployment:
+  replicas: 1
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+service:
+  type: LoadBalancer
+
+# Dashboard stays internal; reach it with a port-forward to the Traefik service.
+# It is deliberately not published through an IngressRoute.
+ingressRoute:
+  dashboard:
+    enabled: false
+
+providers:
+  kubernetesIngress:
+    enabled: true
+  kubernetesCRD:
+    enabled: true
+
+logs:
+  general:
+    level: INFO
