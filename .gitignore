@@ -44,3 +44,6 @@ INBOX.md
 
 # Go build artifact (module github.com/avramukk/homelab/demo)
 /apps/demo/demo
+
+# AGENTS.md is part of the repo (a global ignore excludes it).
+!AGENTS.md
