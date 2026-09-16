@@ -26,7 +26,3 @@ providers:
     enabled: true
   kubernetesCRD:
     enabled: true
-
-logs:
-  general:
-    level: INFO
