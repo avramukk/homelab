@@ -66,3 +66,4 @@ What becomes easier, what becomes harder, what we accept as a known limitation.
 | [022](022-demo-api-tailnet-only.md) | Demo API is tailnet-only | Accepted |
 | [023](023-host-ports-lan-reachable.md) | Host ports stay LAN-reachable (accepted risk) | Accepted |
 | [024](024-status-page-gatus.md) | Status page served by Gatus | Accepted |
+| [025](025-run-1-pilot.md) | Run 1 is a pilot; a clean rebuild is planned | Accepted |
