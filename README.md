@@ -1,11 +1,18 @@
 # Homelab
 
-A production-grade SRE homelab, built in public. Single-cluster Kubernetes on
-immutable infrastructure, operated with GitOps, observability, SLOs, tested
-backups, and documented decisions.
+A production-grade SRE homelab, built in public. Single-cluster Kubernetes,
+operated with GitOps, observability, SLOs, and documented decisions — **run 1, a
+pilot**.
 
-> Status: **planning → scaffolding.** No infrastructure is running yet. Decisions
-> are captured as ADRs; implementation follows phase by phase.
+> **Run 1 — a pilot.** This is the first, deliberately experimental build. It
+> exists to surface problems and settle decisions before a clean rebuild (run 2).
+> Every mistake, reversal and fix is documented — start with
+> [`docs/lessons-learned.md`](docs/lessons-learned.md) and
+> [ADR-025](docs/adr/025-run-1-pilot.md).
+
+> Status: **Running** — a single-node k3s cluster, operated with production-grade
+> practice but explicitly **not** production. See
+> [`docs/architecture/overview.md`](docs/architecture/overview.md).
 
 ## Start here
 

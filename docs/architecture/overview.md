@@ -6,11 +6,17 @@
 ## Purpose
 
 A **production-grade SRE homelab**: a single-cluster Kubernetes environment built
-and operated with the practices you would expect in production — immutable OS,
-GitOps, observability, SLOs, tested backups, and documented decisions. It doubles
-as a public showcase: the **repository**, the **status page** and the **demo API**
-are public, while dashboards stay private
-([ADR-020](../adr/020-grafana-private.md), [ADR-021](../adr/021-publish-demo-api.md)).
+and operated with the practices you would expect in production — GitOps,
+observability, SLOs, and documented decisions. It doubles as a public showcase:
+the **repository** and the **status page** are public, while dashboards and the
+demo API stay private
+([ADR-020](../adr/020-grafana-private.md), [ADR-022](../adr/022-demo-api-tailnet-only.md)).
+
+This cluster is **run 1** — a deliberate pilot
+([ADR-025](../adr/025-run-1-pilot.md)). It was built to surface problems and
+settle decisions before a clean rebuild; what went wrong, and what run 2 should
+do differently, is recorded in
+[`lessons-learned.md`](../lessons-learned.md).
 
 ## Context
 
