@@ -123,6 +123,9 @@ Project skills in `.opencode/skills/` — load them for the matching tool:
 `cloudflare-tunnel` (public hostnames, DNS), `restic-backup` (backups/restore),
 `talos` (deferred runtime — kept for a future bare-metal host).
 
+The full human-readable map of which skills this repository uses, and when, is in
+[`docs/skills.md`](docs/skills.md).
+
 Global skills worth loading by task:
 
 | Task | Skill |

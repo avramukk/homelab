@@ -19,6 +19,7 @@ reasoning end to end, without reading the code first.
 8. [`security/`](security/) — the hardening baseline.
 9. [`incident-reports/`](incident-reports/) — blameless postmortems, incl. the
    deliberate chaos experiment.
+10. [`skills.md`](skills.md) — which agent skills this repository uses, and when.
 
 ## Conventions
 
