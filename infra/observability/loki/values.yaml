@@ -61,12 +61,6 @@ resultsCache:
 lokiCanary:
   enabled: false
 
-# Scrape Loki's own metrics so the stack-health dashboard is not empty.
-serviceMonitor:
-  enabled: true
-  labels:
-    release: kube-prometheus-stack
-
 test:
   enabled: false
 
@@ -75,3 +69,8 @@ monitoring:
     enabled: false
   lokiCanary:
     enabled: false
+  # Scrape Loki's own metrics so the stack-health dashboard is not empty.
+  serviceMonitor:
+    enabled: true
+    labels:
+      release: kube-prometheus-stack
