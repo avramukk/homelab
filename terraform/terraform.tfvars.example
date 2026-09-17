@@ -7,7 +7,8 @@ tunnel_name          = "homelab"
 
 # Served openly through the Cloudflare Tunnel: subdomain → in-cluster Service.
 public_hostnames = {
-  "status" = "http://uptime-kuma.status.svc.cluster.local:3001"
+  "homelab" = "http://landing.landing.svc.cluster.local:80"
+  "status"  = "http://gatus.status.svc.cluster.local:80"
 }
 
 # Tailnet-only: DNS-only A record → tailscale_ip, routed by Traefik. Not proxied.

@@ -36,7 +36,7 @@ flowchart LR
 | Ingress | Traefik | Running |
 | Secrets | Sealed Secrets | Running |
 | Observability | Prometheus, Loki, Grafana, Tempo, OpenTelemetry, Alloy | Running |
-| Status | Uptime Kuma | Running |
+| Status | Gatus (status page as code) | Running |
 | Public edge | Cloudflare Tunnel | Running |
 | Demo workload | Go CRUD service + PostgreSQL, OTel-instrumented | Running |
 | Alerts | Alertmanager → Telegram (page/ticket) | Planned |

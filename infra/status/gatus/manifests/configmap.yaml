@@ -1,0 +1,94 @@
+# Gatus — the public status page, configured entirely as code.
+# Checks run from inside the cluster, so tailnet-only services (Grafana, Argo CD)
+# are monitored without being exposed. Every endpoint is an in-cluster or public
+# URL; adding a service means adding a block here.
+storage:
+  type: sqlite
+  path: /data/data.db
+
+endpoints:
+  - name: Landing page
+    group: Public
+    url: "https://homelab.avramukk.com"
+    interval: 5m
+    conditions:
+      - "[STATUS] == 200"
+
+  - name: Status page
+    group: Public
+    url: "https://status.avramukk.com"
+    interval: 5m
+    conditions:
+      - "[STATUS] == 200"
+
+  - name: Traefik
+    group: Platform
+    url: "http://traefik.traefik.svc.cluster.local:80/ping"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+
+  - name: Argo CD
+    group: Platform
+    url: "http://argocd-server.argocd.svc.cluster.local:80/healthz?full=true"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+
+  - name: Sealed Secrets controller
+    group: Platform
+    url: "http://sealed-secrets-controller.kube-system.svc.cluster.local:8080/healthz"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+
+  - name: Prometheus
+    group: Observability
+    url: "http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090/-/healthy"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+
+  - name: Grafana
+    group: Observability
+    url: "http://kube-prometheus-stack-grafana.observability.svc.cluster.local:80/api/health"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+      - "[BODY].database == ok"
+
+  - name: Loki
+    group: Observability
+    url: "http://loki.observability.svc.cluster.local:3100/ready"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+
+  - name: Tempo
+    group: Observability
+    url: "http://tempo.observability.svc.cluster.local:3200/ready"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+
+  - name: Alloy
+    group: Observability
+    url: "http://alloy.observability.svc.cluster.local:12345/-/ready"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+
+  - name: Demo API
+    group: Workloads
+    url: "http://demo.demo.svc.cluster.local:80/healthz/ready"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+      - "[BODY] == ready"
+
+  - name: Demo PostgreSQL
+    group: Workloads
+    url: "tcp://postgres.demo.svc.cluster.local:5432"
+    interval: 1m
+    conditions:
+      - "[CONNECTED] == true"
