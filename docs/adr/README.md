@@ -64,3 +64,4 @@ What becomes easier, what becomes harder, what we accept as a known limitation.
 | [020](020-grafana-private.md) | Grafana stays private; only the status page is public | Accepted |
 | [021](021-publish-demo-api.md) | Publish the demo API at demo.avramukk.com | Amended by [022](022-demo-api-tailnet-only.md) |
 | [022](022-demo-api-tailnet-only.md) | Demo API is tailnet-only | Accepted |
+| [023](023-host-ports-lan-reachable.md) | Host ports stay LAN-reachable (accepted risk) | Accepted |

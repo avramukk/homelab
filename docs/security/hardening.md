@@ -24,7 +24,7 @@
 | Non-root, RO rootfs, dropped caps, `allowPrivilegeEscalation: false` | applied to the workloads we author (demo, postgres, landing, cloudflared) |
 | NetworkPolicy default-deny + explicit allow | `demo`, `landing` only; k3s **kube-router** enforces it (not Cilium) — *rollout in progress* |
 | Sealed Secrets; no plaintext in Git | ✅ enforced (gitleaks pre-commit + CI) |
-| Public surface: Cloudflare Tunnel only, tailnet for admin UIs | ✅ (Traefik private routers restricted to the tailnet CIDR) |
+| Public surface: Cloudflare Tunnel only, tailnet for admin UIs | ✅ public = landing + status; admin UIs resolvable only on the tailnet (**host ports also answer on the LAN** — [ADR-023](../adr/023-host-ports-lan-reachable.md)) |
 | Image scanning (Trivy) | ❌ not wired yet (CI builds with provenance/SBOM only) |
 | Admission policies (Kyverno) | ❌ not installed yet |
 | Image digest pinning | ❌ demo currently on a mutable tag |
@@ -37,6 +37,11 @@
 - **Tailnet-only demo API.** `demo.avramukk.com` resolves only inside the tailnet
   (DNS A → tailnet IP, Traefik + TLS) — it is *not* public. Its data is
   disposable. Rate limiting / Access are unnecessary while it stays tailnet-only.
+- **Host ports reachable on the LAN** ([ADR-023](../adr/023-host-ports-lan-reachable.md)).
+  k3d publishes 80/443 on all host interfaces, so Grafana/Argo **login pages** and
+  the demo API answer on the home network when the `Host` header is supplied. A
+  `pf` rule or a cluster rebuild would close this; both are deferred. Revisit if
+  untrusted devices share the LAN.
 - **Single-disk local backups.** Loss of the host loses the backup repository;
   offsite is planned. Documented in [ADR-010](../adr/010-backup-restic-local.md).
 
