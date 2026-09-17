@@ -20,6 +20,8 @@ by phase.
 - SLO recording + multi-window burn-rate rules with runbooks ([ADR-009](docs/adr/009-alerting-telegram-slo.md)).
 - Demo API published at `demo.avramukk.com` through the tunnel ([ADR-021](docs/adr/021-publish-demo-api.md)); Grafana remains private.
 - Grafana dashboards as code: Demo RED, Demo SLO / error budget, Cluster and Stack health (provisioned via labelled ConfigMaps).
+- Status page as code with **Gatus** at `status.avramukk.com` — 12 checks across Public/Platform/Observability/Workloads, all defined in one ConfigMap ([ADR-024](docs/adr/024-status-page-gatus.md)).
+- Audit fixes: Tempo datasource port, `DemoDown` per-replica paging, Prometheus retention vs the 6h burn-rate window, k3s-absent scrape targets, Loki/Alloy ServiceMonitors, sealed-secrets resources, namespace Pod Security labels, tailnet/LAN trade-off documented ([ADR-023](docs/adr/023-host-ports-lan-reachable.md)).
 - Operator credentials consolidated in 1Password (`Homelab · *` items); the repository keeps SealedSecret ciphertext only ([docs/operations/credentials.md](docs/operations/credentials.md)).
 
 ### Changed
