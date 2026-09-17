@@ -1,0 +1,21 @@
+# The Traefik chart does not expose its `traefik` entrypoint (dashboard/ping,
+# container port 8080) in the Service. This one does, so the status page can hit
+# /ping as a liveness signal.
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-ping
+  namespace: traefik
+  labels:
+    app.kubernetes.io/name: traefik
+    app.kubernetes.io/part-of: homelab
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: traefik
+    app.kubernetes.io/instance: traefik-traefik
+  ports:
+    - name: traefik
+      port: 8080
+      targetPort: traefik
+      protocol: TCP

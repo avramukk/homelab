@@ -17,11 +17,6 @@ resources:
 service:
   type: LoadBalancer
 
-# Expose the `traefik` entrypoint (9000) so the status page can hit /ping.
-ports:
-  traefik:
-    expose: true
-
 # Dashboard stays internal.
 ingressRoute:
   dashboard:
