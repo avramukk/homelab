@@ -39,6 +39,10 @@ k3s' default **local-path** provisioner. There is no replicated storage —
 replication is out of scope for a single host; durability is handled by backups
 ([ADR-010](../adr/010-backup-restic-local.md)).
 
+PostgreSQL for the demo runs as a **single replica with no PodDisruptionBudget**:
+a PDB cannot protect a one-replica workload, and `minAvailable: 1` would block
+node drains entirely. It is best-effort by design.
+
 ## Networking
 
 - **CNI:** k3s default (flannel). k3s' built-in NetworkPolicy support is limited;

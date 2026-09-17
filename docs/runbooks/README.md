@@ -17,14 +17,14 @@ to the runbook that resolves it.
 
 ## Index
 
-| Runbook | Used for | Linked alert |
+| Runbook | Used for | Status |
 |---|---|---|
-| [talos-upgrade.md](talos-upgrade.md) | upgrading Talos / Kubernetes | — (planned maintenance) |
-| [cluster-recovery.md](cluster-recovery.md) | cluster or node down / rebuild | `ClusterUnavailable` |
-| [restore.md](restore.md) | restoring from Restic | `BackupFailed` |
-| [demo-slo.md](demo-slo.md) | demo service error-budget / latency / down | `DemoErrorBudgetFastBurn`, `DemoErrorBudgetSlowBurn`, `DemoLatencyHigh`, `DemoDown` |
-| [cloudflare-tunnel.md](cloudflare-tunnel.md) | public dashboard unreachable | `PublicDashboardDown` |
-| [argocd-bootstrap.md](argocd-bootstrap.md) | re-bootstrapping GitOps | `ArgoCDOutOfSync` |
+| [demo-slo.md](demo-slo.md) | demo error budget / latency / down | ✅ written |
+| [cloudflare-tunnel.md](cloudflare-tunnel.md) | public hostname unreachable, DNS | ✅ written |
+| [argocd-bootstrap.md](argocd-bootstrap.md) | Argo CD install / recovery | ✅ written |
+| `restore.md` | restoring from Restic | ⏳ planned (with ADR-010 implementation) |
+| `cluster-recovery.md` | cluster or node down / rebuild | ⏳ planned |
+| `talos-upgrade.md` | upgrading the node OS | ⏳ planned (Talos is deferred) |
 
-> Status: `Planned`. Runbooks are written as each subsystem lands, and updated
-> during the incident drill ([ADR-014](../adr/014-incident-drill.md)).
+> Statuses here must match reality: a runbook listed as written must exist, and an
+> alert must link a runbook that exists. Keep this table honest.

@@ -5,5 +5,18 @@ cloudflare_api_token = "replace-with-cloudflare-api-token"
 zone_name            = "avramukk.com"
 tunnel_name          = "homelab"
 
-# Subdomains under zone_name published through the tunnel (DNS records).
-public_hostnames = ["homelab"]
+# Served openly through the Cloudflare Tunnel: subdomain → in-cluster Service.
+public_hostnames = {
+  "status" = "http://uptime-kuma.status.svc.cluster.local:3001"
+}
+
+# Tailnet-only: DNS-only A record → tailscale_ip, routed by Traefik. Not proxied.
+private_hostnames = {
+  "grafana" = "kube-prometheus-stack-grafana.observability.svc.cluster.local"
+}
+
+# Tailscale (tailnet) IP of the cluster host.
+tailscale_ip = "100.x.y.z"
+
+# Names that resolve through the tunnel but serve nothing (catch-all 404).
+reserved_hostnames = []

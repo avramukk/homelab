@@ -1,6 +1,8 @@
 # Observability, SLOs and Alerting
 
-> Status: `Planned`. See [ADR-007](../adr/007-observability-lgtm-otel.md) and
+> Status: `Partial`. Metrics/logs/traces and dashboards run; **alert delivery is
+> not wired yet** (Alertmanager has a null receiver) and backup/cluster alerts are
+> missing. See [ADR-007](../adr/007-observability-lgtm-otel.md) and
 > [ADR-009](../adr/009-alerting-telegram-slo.md).
 
 ## Stack

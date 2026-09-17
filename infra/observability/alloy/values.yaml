@@ -92,3 +92,9 @@ rbac:
     - apiGroups: [""]
       resources: ["pods/log"]
       verbs: ["get", "list", "watch"]
+
+# Scrape Alloy's own metrics (stack-health dashboard depends on it).
+serviceMonitor:
+  enabled: true
+  labels:
+    release: kube-prometheus-stack

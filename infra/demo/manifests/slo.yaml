@@ -18,26 +18,35 @@ spec:
       interval: 30s
       rules:
         # Error ratio = 5xx / total, over the burn-rate windows.
+        # `or vector(0)` keeps the series present when there is no traffic.
         - record: demo:error_ratio:rate5m
           expr: |
-            sum(rate(http_requests_total{job="demo", status_class="5xx"}[5m]))
-            /
-            sum(rate(http_requests_total{job="demo"}[5m]))
+            (
+              sum(rate(http_requests_total{job="demo", status_class="5xx"}[5m]))
+              /
+              sum(rate(http_requests_total{job="demo"}[5m]))
+            ) or vector(0)
         - record: demo:error_ratio:rate30m
           expr: |
-            sum(rate(http_requests_total{job="demo", status_class="5xx"}[30m]))
-            /
-            sum(rate(http_requests_total{job="demo"}[30m]))
+            (
+              sum(rate(http_requests_total{job="demo", status_class="5xx"}[30m]))
+              /
+              sum(rate(http_requests_total{job="demo"}[30m]))
+            ) or vector(0)
         - record: demo:error_ratio:rate1h
           expr: |
-            sum(rate(http_requests_total{job="demo", status_class="5xx"}[1h]))
-            /
-            sum(rate(http_requests_total{job="demo"}[1h]))
+            (
+              sum(rate(http_requests_total{job="demo", status_class="5xx"}[1h]))
+              /
+              sum(rate(http_requests_total{job="demo"}[1h]))
+            ) or vector(0)
         - record: demo:error_ratio:rate6h
           expr: |
-            sum(rate(http_requests_total{job="demo", status_class="5xx"}[6h]))
-            /
-            sum(rate(http_requests_total{job="demo"}[6h]))
+            (
+              sum(rate(http_requests_total{job="demo", status_class="5xx"}[6h]))
+              /
+              sum(rate(http_requests_total{job="demo"}[6h]))
+            ) or vector(0)
         - record: demo:latency_p95:rate10m
           expr: |
             histogram_quantile(0.95,
@@ -93,8 +102,10 @@ spec:
             runbook_url: "https://github.com/avramukk/homelab/blob/main/docs/runbooks/demo-slo.md"
 
         # Symptom: the service is not scrapeable at all. Page.
+        # `min(...) == 0` — fire only when *every* replica is unscrapable, not
+        # when a single replica restarts (`up` is per-target).
         - alert: DemoDown
-          expr: up{job="demo"} == 0
+          expr: min(up{job="demo"}) == 0
           for: 2m
           labels:
             severity: page

@@ -6,8 +6,8 @@ crds:
 
 prometheus:
   prometheusSpec:
-    # Short local retention; long-term storage (Mimir/Thanos) is out of scope.
-    retention: 6h
+    # Retention must exceed the longest SLO burn-rate window (rate6h).
+    retention: 12h
     # Conservative interval keeps sample rate (and cardinality) low.
     scrapeInterval: 60s
     evaluationInterval: 60s
@@ -17,7 +17,7 @@ prometheus:
         memory: 512Mi
       limits:
         cpu: 500m
-        memory: 1Gi
+        memory: 2Gi
     storageSpec:
       volumeClaimTemplate:
         spec:
@@ -56,7 +56,7 @@ grafana:
         maxLines: 1000
     - name: Tempo
       type: tempo
-      url: http://tempo.observability.svc.cluster.local:3100
+      url: http://tempo.observability.svc.cluster.local:3200
       access: proxy
       jsonData:
         nodeGraph:
@@ -90,6 +90,16 @@ kube-state-metrics:
     limits:
       cpu: 100m
       memory: 128Mi
+
+# k3s does not run kube-proxy / kube-scheduler / kube-controller-manager as
+# scrapeable targets; leaving them enabled produces permanently firing false
+# alerts (KubeProxyDown, KubeSchedulerDown, KubeControllerManagerDown).
+kubeProxy:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeControllerManager:
+  enabled: false
 
 prometheus-node-exporter:
   resources:

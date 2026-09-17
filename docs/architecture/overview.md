@@ -1,7 +1,7 @@
 # Architecture Overview
 
-> Status: `Planned` — this describes the target system. Components are marked
-> with their implementation state as they land.
+> Status: `Running`. This page describes the system as built; components carry
+> their own state where they diverge.
 
 ## Purpose
 
@@ -33,15 +33,15 @@ flowchart LR
 |---|---|---|
 | Runtime | k3s via k3d (1 server + 2 agents) | Running |
 | GitOps | Argo CD | Running |
-| Ingress | Traefik | Planned |
-| Secrets | Sealed Secrets | Planned |
+| Ingress | Traefik | Running |
+| Secrets | Sealed Secrets | Running |
 | Observability | Prometheus, Loki, Grafana, Tempo, OpenTelemetry, Alloy | Running |
 | Status | Uptime Kuma | Running |
 | Public edge | Cloudflare Tunnel | Running |
 | Demo workload | Go CRUD service + PostgreSQL, OTel-instrumented | Running |
 | Alerts | Alertmanager → Telegram (page/ticket) | Planned |
 | Backup | Restic → local disk (B2 deferred) | Planned |
-| IaC | OpenTofu (Cloudflare DNS, Tailscale) | Planned |
+| IaC | OpenTofu (Cloudflare DNS, Tailscale) | Running |
 
 ## Design principles
 

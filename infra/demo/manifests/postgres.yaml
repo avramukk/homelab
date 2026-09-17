@@ -119,14 +119,6 @@ spec:
         resources:
           requests:
             storage: 2Gi
----
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: postgres
-spec:
-  maxUnavailable: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: postgres
-      app.kubernetes.io/component: database
+# No PodDisruptionBudget: with replicas: 1 a PDB protects nothing, and
+# minAvailable: 1 would block node drains. Postgres is best-effort by design;
+# durability comes from backups (ADR-010).

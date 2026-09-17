@@ -1,7 +1,7 @@
 # ADR-021: Publish the demo API at demo.avramukk.com
 
 ## Status
-Accepted — amends [ADR-020](020-grafana-private.md)
+Amended by [ADR-022](022-demo-api-tailnet-only.md) — amends [ADR-020](020-grafana-private.md)
 
 ## Date
 2026-09-16

@@ -21,3 +21,6 @@ persistence:
 
 serviceMonitor:
   enabled: true
+  # Selected by the kube-prometheus-stack Prometheus (release label).
+  labels:
+    release: kube-prometheus-stack

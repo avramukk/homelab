@@ -62,4 +62,5 @@ What becomes easier, what becomes harder, what we accept as a known limitation.
 | [018](018-cloudflare-tunnel-cli-opentofu-dns.md) | Cloudflare Tunnel via CLI; OpenTofu manages DNS only | Superseded by [019](019-cloudflare-tunnel-in-opentofu.md) |
 | [019](019-cloudflare-tunnel-in-opentofu.md) | Cloudflare Tunnel managed in OpenTofu | Accepted |
 | [020](020-grafana-private.md) | Grafana stays private; only the status page is public | Accepted |
-| [021](021-publish-demo-api.md) | Publish the demo API at demo.avramukk.com | Accepted |
+| [021](021-publish-demo-api.md) | Publish the demo API at demo.avramukk.com | Amended by [022](022-demo-api-tailnet-only.md) |
+| [022](022-demo-api-tailnet-only.md) | Demo API is tailnet-only | Accepted |

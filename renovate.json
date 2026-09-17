@@ -1,0 +1,60 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":dependencyDashboard",
+    ":enableVulnerabilityAlertsWithLabel(security)"
+  ],
+  "timezone": "Europe/Kyiv",
+  "schedule": ["before 6am on monday"],
+  "labels": ["dependencies"],
+  "prConcurrentLimit": 3,
+  "packageRules": [
+    {
+      "description": "Group updates by ecosystem to keep the PR list short",
+      "matchManagers": ["github-actions"],
+      "groupName": "github actions"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "groupName": "container images"
+    },
+    {
+      "matchManagers": ["gomod"],
+      "groupName": "go modules"
+    },
+    {
+      "matchManagers": ["terraform"],
+      "groupName": "opentofu providers"
+    },
+    {
+      "description": "Platform component charts: one PR at a time, reviewed by hand",
+      "matchDatasources": ["helm"],
+      "labels": ["dependencies", "platform"],
+      "automerge": false
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Helm chart versions in Argo CD Applications (infra/apps/*.yaml)",
+      "fileMatch": ["^infra/apps/.*\\.ya?ml$"],
+      "matchStrings": [
+        "repoURL:\\s*(?<registryUrl>https?://[^\\s]+)\\s*\\n\\s*chart:\\s*(?<depName>[^\\s]+)\\s*\\n\\s*targetRevision:\\s*(?<currentValue>[^\\s]+)"
+      ],
+      "datasourceTemplate": "helm",
+      "versioningTemplate": "helm"
+    },
+    {
+      "customType": "regex",
+      "description": "Container image tags in manifests (infra/**)",
+      "fileMatch": ["^infra/.*\\.ya?ml$"],
+      "matchStrings": [
+        "image:\\s*(?<depName>(?:[a-z0-9.-]+\\.[a-z]{2,}|localhost)(?::[0-9]+)?/[^\\s:@]+):(?<currentValue>[^\\s@]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?"
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ],
+  "ignorePaths": ["docs/**", "terraform/.terraform/**"]
+}

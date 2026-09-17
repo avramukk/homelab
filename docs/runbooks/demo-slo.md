@@ -3,6 +3,11 @@
 Related: [ADR-009](../adr/009-alerting-telegram-slo.md),
 [`docs/operations/observability.md`](../operations/observability.md).
 
+> **Rollback is a Git operation.** Every application syncs with `selfHeal: true`,
+> so `kubectl rollout undo` / manual edits are reverted by Argo CD on the next
+> sync. To roll back, revert the commit (or use `argocd app rollback` for an
+> emergency), then let Argo CD reconcile.
+
 SLOs: availability ≥ 99.5% (error budget 0.5%), p95 < 300 ms.
 
 ## DemoErrorBudgetFastBurn (page)
@@ -20,7 +25,7 @@ kubectl -n demo logs deploy/demo --tail=50 | grep '"status":5'
 
 | Cause | Check | Fix |
 |---|---|---|
-| Bad deploy | `kubectl -n demo rollout history deploy/demo` | `kubectl -n demo rollout undo deploy/demo` |
+| Bad deploy | `kubectl -n demo rollout history deploy/demo` (read-only) | **`git revert <commit>`** — Argo CD re-syncs. Emergency: `argocd app rollback demo <id>` |
 | Database unreachable | `kubectl -n demo logs deploy/demo | grep db_` | check `postgres-0`, NetworkPolicy, secret |
 | Dependency erroring | traces in Tempo for the failing route | follow the error span to its cause |
 
