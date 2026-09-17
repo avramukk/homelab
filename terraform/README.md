@@ -48,7 +48,7 @@ Add an entry to `public_hostnames` (subdomain → in-cluster Service URL) and ap
 
 ```hcl
 public_hostnames = {
-  "status" = "http://uptime-kuma.status.svc.cluster.local:3001"
+  "status" = "http://gatus.status.svc.cluster.local:80"
   "demo"   = "http://demo.demo.svc.cluster.local:80"
 }
 ```
