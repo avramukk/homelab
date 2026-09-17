@@ -30,6 +30,7 @@ kubeconfig*
 
 # Local task tracking (never committed)
 TODO-*.md
+TODO-*.yaml
 
 # Personal backlog/scratchpad (kept local, not part of the public repo)
 INBOX.md
