@@ -33,7 +33,7 @@ data:
 
       - name: Traefik
         group: Platform
-        url: "http://traefik.traefik.svc.cluster.local:80/ping"
+        url: "http://traefik.traefik.svc.cluster.local:9000/ping"
         interval: 1m
         conditions:
           - "[STATUS] == 200"

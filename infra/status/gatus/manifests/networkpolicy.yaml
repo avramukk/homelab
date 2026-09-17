@@ -32,13 +32,14 @@ spec:
       ports:
         - port: 443
           protocol: TCP
-    # In-cluster checks.
+    # In-cluster checks. NOTE: ports are the *container* ports (NetworkPolicy
+    # matches post-DNAT), not the Service ports.
     - to:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: observability
       ports:
-        - port: 80
+        - port: 3000
           protocol: TCP
         - port: 9090
           protocol: TCP
@@ -53,14 +54,16 @@ spec:
             matchLabels:
               kubernetes.io/metadata.name: traefik
       ports:
-        - port: 80
+        - port: 8000
+          protocol: TCP
+        - port: 9000
           protocol: TCP
     - to:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: argocd
       ports:
-        - port: 80
+        - port: 8080
           protocol: TCP
     - to:
         - namespaceSelector:
