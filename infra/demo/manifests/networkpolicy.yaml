@@ -26,6 +26,10 @@ spec:
         - podSelector:
             matchLabels:
               app.kubernetes.io/name: demo
+        # Gatus probes the database for the status page.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: status
       ports:
         - port: 5432
           protocol: TCP
@@ -40,8 +44,8 @@ spec:
       app.kubernetes.io/name: demo
   policyTypes: [Ingress, Egress]
   ingress:
-    # Prometheus scrapes /metrics; an ingress controller may front the API;
-    # cloudflared reaches it for the public hostname.
+    # Prometheus scrapes /metrics; Traefik/cloudflared may front the API; Gatus
+    # uses it for the status page.
     - from:
         - namespaceSelector:
             matchLabels:
@@ -52,6 +56,9 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: cloudflare
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: status
       ports:
         - port: 8080
           protocol: TCP
