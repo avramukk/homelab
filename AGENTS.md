@@ -31,6 +31,24 @@ Internet ──HTTPS──► Cloudflare (DNS + Tunnel)          GitHub ──pu
   `infra/apps` (`infra/bootstrap/root-app.yaml`).
 - `.github/workflows/` — CI: `gitleaks.yml` (secrets) and `build-demo-app.yml`.
 
+## Planning (plannotator)
+
+Planning happens in a **plan file**, not in the chat and not in TODO files.
+
+- Plan artifacts live in `plans/<short-name>.md`, or `PLAN.md` at the repo root for a
+  single focused plan. Both are gitignored: plan files are working artifacts, never
+  committed.
+- There are **no** `TODO-*.md` / `TODO-*.yaml` task files in this repository. The board
+  (GitHub Project #5 *Homelab Roadmap*) is the task tracker; `docs/` is the record.
+- Review flow: write the plan, hand it to the human for annotation, then **stop** —
+  `plannotator-tui herdr open plans/<name>.md` (requires `HERDR_ENV=1`). Feedback arrives
+  as numbered items; address all of them before acting. See `docs/skills.md`.
+- The `plannotator_submit_plan` / `plannotator_mark_done` MCP gate is **not installed**
+  in this environment (no such MCP server is configured). Until it is, a plan is approved
+  by the human's annotation feedback or an explicit "go".
+- A plan that contains remote-write steps must flag them explicitly: approving a plan is
+  **not** approving its remote writes (Atlassian, AWS, Kubernetes, Grafana, Slack, git push).
+
 ## Layout
 
 | Path | Holds |
@@ -106,8 +124,8 @@ kubectl -n <ns> create secret generic <name> --from-literal=K=V --dry-run=client
    Do not expose admin UIs (Grafana, Argo CD) publicly — ADR-020.
 6. **Hostnames are managed in `terraform/`** via `public_hostnames`, `private_hostnames`,
    `reserved_hostnames`. Do not add Cloudflare DNS records by hand.
-7. **Never commit** `terraform.tfvars`, `*.tfstate`, `INBOX.md`, `TODO-*.md`, keys, tokens,
-   or build artifacts (a 28 MB Go binary was once committed here — see `.gitignore`).
+7. **Never commit** `terraform.tfvars`, `*.tfstate`, `INBOX.md`, `plans/`, `PLAN.md`, keys,
+   tokens, or build artifacts (a 28 MB Go binary was once committed here — see `.gitignore`).
    No employer or client names anywhere, including history.
 8. **History is linear and signed.** Commits are SSH-signed (repo-local config); one ADR per
    commit; Conventional Commits. Rewriting history (filter-repo) requires re-signing every

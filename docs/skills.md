@@ -26,6 +26,7 @@ The skills that carry most of the work in this repository.
 | `documentation-and-adrs` | writing an ADR, or deciding what must be documented | `docs/adr/` (001–025) |
 | `promql` / `prometheus` | SLO and recording rules, burn-rate math, cardinality hunting | `infra/demo/manifests/slo.yaml`, dashboards |
 | `verification-before-completion` | before claiming anything is done, fixed or passing | every task's exit criteria |
+| `plannotator-tui` | handing a plan or design doc to the human for annotation instead of pasting it in chat | `plans/<name>.md` before any multi-step work |
 
 ## Project skills
 
@@ -65,7 +66,7 @@ code and take precedence over global skills of the same name.
 | Security review, hardening, supply chain | `security-and-hardening`, `security-audit` |
 | Commits, branches, releases | `git-workflow-and-versioning` |
 | ADRs and docs | `documentation-and-adrs` |
-| Plan a multi-step change | `writing-plans`, `executing-plans` |
+| Plan a multi-step change | `plannotator-tui` — plan files live in `plans/` and are gitignored |
 | Backfill or history analysis | `historical-pattern-analysis` |
 | Diagrams | `excalidraw-skill` |
 | Reading a long web page | `defuddle` |

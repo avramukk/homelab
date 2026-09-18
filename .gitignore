@@ -32,6 +32,10 @@ kubeconfig*
 TODO-*.md
 TODO-*.yaml
 
+# Plannotator plan artifacts: working files, never committed
+plans/
+PLAN.md
+
 # Personal backlog/scratchpad (kept local, not part of the public repo)
 INBOX.md
 
