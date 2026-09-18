@@ -43,9 +43,14 @@ Planning happens in a **plan file**, not in the chat and not in TODO files.
 - Review flow: write the plan, hand it to the human for annotation, then **stop** —
   `plannotator-tui herdr open plans/<name>.md` (requires `HERDR_ENV=1`). Feedback arrives
   as numbered items; address all of them before acting. See `docs/skills.md`.
-- The `plannotator_submit_plan` / `plannotator_mark_done` MCP gate is **not installed**
-  in this environment (no such MCP server is configured). Until it is, a plan is approved
-  by the human's annotation feedback or an explicit "go".
+- `plannotator_submit_plan` / `plannotator_mark_done` are **native agent tools**, not MCP:
+  they are registered by the Plannotator extension/plugin and only exist while a plan phase
+  is active (planning / executing respectively). There is no Plannotator MCP server.
+  - Pi: `npm:@plannotator/pi-extension` is installed, so `pi --plan` (or `/plannotator-plan-mode`,
+    `Ctrl+Alt+P`) drives the gate — the tools appear once plan mode starts.
+  - OpenCode: the `@plannotator/opencode` plugin provides `submit_plan`; without it the gate is
+    absent. Either way, in this repo a plan is approved by the human's annotation feedback or an
+    explicit "go" — never assume approval from silence.
 - A plan that contains remote-write steps must flag them explicitly: approving a plan is
   **not** approving its remote writes (Atlassian, AWS, Kubernetes, Grafana, Slack, git push).
 
